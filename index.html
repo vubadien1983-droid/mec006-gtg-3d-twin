@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -486,6 +486,175 @@ canvas.polar-canvas {
   position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
   flex-direction: column; text-align: center; padding: 24px; color: var(--muted); gap: 8px;
 }
+
+/* ===== Equipment Detail Pop-up Modal ===== */
+.equip-modal-backdrop {
+  position: fixed; inset: 0; z-index: 1200;
+  background: rgba(2, 6, 23, 0.80); backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center; padding: 18px;
+  opacity: 1; transition: opacity 0.2s ease;
+}
+.equip-modal-backdrop.hidden {
+  display: none; opacity: 0; pointer-events: none;
+}
+.equip-modal {
+  width: min(1020px, 95vw); max-height: 90vh;
+  display: flex; flex-direction: column; overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.99), rgba(9, 14, 26, 0.99));
+  box-shadow: 0 24px 72px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(56, 189, 248, 0.12) inset;
+  color: #e2e8f0;
+  animation: modalPopIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes modalPopIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.975); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.equip-modal-head {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+  padding: 14px 18px 12px;
+  background: linear-gradient(90deg, rgba(30, 58, 138, 0.35), rgba(15, 23, 42, 0.92));
+  border-bottom: 1px solid rgba(56, 189, 248, 0.22);
+}
+.equip-modal-title-wrap { flex: 1; min-width: 0; }
+.equip-modal-badges { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 5px; }
+.equip-modal-tag {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.4px;
+  padding: 2px 8px; border-radius: 4px;
+  background: rgba(56, 189, 248, 0.18); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.4);
+}
+.equip-modal-pid {
+  font-size: 10.5px; font-weight: 600; color: #cbd5e1;
+  background: rgba(148, 163, 184, 0.14); border: 1px solid rgba(148, 163, 184, 0.28);
+  padding: 2px 8px; border-radius: 4px;
+}
+.equip-modal-idx { font-size: 10.5px; color: var(--muted); font-family: monospace; }
+.equip-modal-title {
+  margin: 0; font-size: 17px; font-weight: 700; color: #f8fafc; line-height: 1.25;
+}
+.equip-modal-actions {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end;
+}
+.modal-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600;
+  cursor: pointer; border: 1px solid rgba(148, 163, 184, 0.32);
+  background: rgba(30, 41, 59, 0.85); color: #e2e8f0; transition: all 0.15s;
+}
+.modal-btn:hover { background: rgba(51, 65, 85, 0.95); border-color: rgba(148, 163, 184, 0.6); }
+.modal-btn.primary {
+  background: rgba(14, 116, 144, 0.38); border-color: rgba(56, 189, 248, 0.55); color: #bae6fd;
+}
+.modal-btn.primary:hover { background: rgba(14, 116, 144, 0.6); }
+.modal-btn.amber {
+  background: rgba(180, 83, 9, 0.32); border-color: rgba(245, 158, 11, 0.55); color: #fde68a;
+}
+.modal-btn.amber:hover { background: rgba(180, 83, 9, 0.55); }
+.modal-btn.close {
+  background: rgba(220, 38, 38, 0.2); border-color: rgba(248, 113, 113, 0.45); color: #fecaca;
+  padding: 5px 11px;
+}
+.modal-btn.close:hover { background: rgba(220, 38, 38, 0.45); }
+
+.equip-modal-livebar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  padding: 8px 18px; background: rgba(15, 23, 42, 0.72);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+}
+.equip-modal-livebar .live-badge {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px;
+  color: #34d399; background: rgba(16, 185, 129, 0.14); border: 1px solid rgba(16, 185, 129, 0.35);
+  padding: 2px 7px; border-radius: 99px;
+}
+.equip-modal-livechips { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; }
+.equip-modal-livechips .live-chip {
+  background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(148, 163, 184, 0.24);
+  border-radius: 6px; padding: 3px 9px; display: inline-flex; align-items: center; gap: 6px;
+}
+.equip-modal-livechips .lc-k { font-size: 10.5px; color: var(--muted); }
+.equip-modal-livechips .lc-v { font-size: 11.5px; font-weight: 700; color: #f8fafc; font-family: monospace; }
+
+.equip-modal-body {
+  padding: 14px 18px 18px; overflow-y: auto;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;
+}
+@media (max-width: 780px) {
+  .equip-modal-body { grid-template-columns: 1fr; }
+}
+.em-card {
+  background: rgba(15, 23, 42, 0.78);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 9px; padding: 11px 13px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.em-card.full { grid-column: 1 / -1; }
+.em-card.func { border-left: 3px solid #38bdf8; }
+.em-card.purpose { border-left: 3px solid #34d399; }
+.em-card.constr { border-left: 3px solid #a78bfa; }
+.em-card.oper { border-left: 3px solid #fbbf24; }
+.em-card.ce {
+  border-left: 3px solid #f43f5e;
+  background: linear-gradient(135deg, rgba(136, 19, 55, 0.22), rgba(15, 23, 42, 0.92));
+}
+.em-card.specs { border-left: 3px solid #94a3b8; }
+.em-card-h {
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.65px;
+  color: #f8fafc; display: flex; align-items: center; gap: 6px;
+}
+.em-card-p {
+  margin: 0; font-size: 12.2px; line-height: 1.55; color: #cbd5e1;
+}
+.em-list {
+  margin: 0; padding-left: 16px; display: flex; flex-direction: column; gap: 4px;
+  font-size: 12px; line-height: 1.5; color: #cbd5e1;
+}
+.em-list li strong { color: #f8fafc; }
+.em-ce-flow {
+  display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 8px; align-items: stretch; margin-top: 4px;
+}
+@media (max-width: 780px) {
+  .em-ce-flow { grid-template-columns: 1fr; }
+  .em-ce-arrow { transform: rotate(90deg); justify-self: center; }
+}
+.em-ce-box {
+  background: rgba(2, 6, 23, 0.55); border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 7px; padding: 8px 10px;
+}
+.em-ce-box.cause { border-color: rgba(245, 158, 11, 0.45); }
+.em-ce-box.logic { border-color: rgba(56, 189, 248, 0.45); }
+.em-ce-box.effect { border-color: rgba(244, 63, 94, 0.55); }
+.em-ce-lbl {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px;
+}
+.em-ce-box.cause .em-ce-lbl { color: #fbbf24; }
+.em-ce-box.logic .em-ce-lbl { color: #38bdf8; }
+.em-ce-box.effect .em-ce-lbl { color: #fb7185; }
+.em-ce-txt { font-size: 11.8px; line-height: 1.48; color: #e2e8f0; }
+.em-ce-arrow {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 700; color: #94a3b8;
+}
+.em-specs-grid {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px;
+}
+.em-spec-item {
+  background: rgba(2, 6, 23, 0.45); border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 5px; padding: 5px 8px;
+}
+.em-spec-k { font-size: 10px; color: var(--muted); }
+.em-spec-v { font-size: 11.5px; font-weight: 600; color: #f1f5f9; font-family: monospace; }
+.em-warn-box {
+  margin-top: 4px; padding: 8px 10px; border-radius: 6px;
+  background: rgba(234, 88, 12, 0.16); border: 1px solid rgba(251, 146, 60, 0.45);
+  font-size: 11.8px; line-height: 1.48; color: #fed7aa;
+}
+.equip-modal-foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 9px 18px; background: rgba(2, 6, 23, 0.72);
+  border-top: 1px solid rgba(148, 163, 184, 0.18); font-size: 11px; color: var(--muted);
+}
 </style>
 </head>
 <body>
@@ -507,25 +676,25 @@ canvas.polar-canvas {
     </div>
 
     <div class="topbar-controls">
-      <select id="unitSelect" class="ctrl-select" onchange="selectUnit(this.value)" title="Chọn tổ máy GTG">
+      <select id="unitSelect" class="ctrl-select" onchange="selectUnit(this.value)" title="Select GTG Unit">
         <option value="6001">PK-6001 (TG25N19)</option>
         <option value="6002">PK-6002 (TG25N20)</option>
         <option value="6003">PK-6003 (TG25N21)</option>
       </select>
-      <select id="ambientSelect" class="ctrl-select" onchange="setAmbient(parseFloat(this.value))" title="Nhiệt độ môi trường thiết kế (GFS-99510)">
+      <select id="ambientSelect" class="ctrl-select" onchange="setAmbient(parseFloat(this.value))" title="Design Ambient Temperature (GFS-99510)">
         <option value="36.4" selected>36.4°C (6265kW)</option>
         <option value="28.8">28.8°C (6804kW)</option>
         <option value="22.5">22.5°C (7206kW)</option>
       </select>
       <span id="statePill" class="state-pill state-run">ON-LOAD · GAS</span>
-      <div class="speed-group" title="Tốc độ mô phỏng">
+      <div class="speed-group" title="Simulation Speed">
         <button class="speed-btn active" onclick="setSimSpeed(1,this)">1x</button>
         <button class="speed-btn" onclick="setSimSpeed(2,this)">2x</button>
         <button class="speed-btn" onclick="setSimSpeed(5,this)">5x</button>
       </div>
-      <button class="btn btn-green" onclick="cmdColdStartDemo()" title="Mô phỏng quy trình khởi động nguội 8 bước từ 0%">▶ Start</button>
-      <button class="btn btn-amber" onclick="cmdNormalStop()" title="Dừng bình thường: Giảm tải 40 kW/s -> Cooldown -> Slow Roll">■ Stop</button>
-      <button class="btn btn-red" onclick="cmdEStop()" title="Dừng khẩn cấp SB0400 (Fast Stop Lockout)">⏻ E-STOP</button>
+      <button class="btn btn-green" onclick="cmdColdStartDemo()" title="Simulate 8-step cold start sequence from 0% Ngp">▶ Start</button>
+      <button class="btn btn-amber" onclick="cmdNormalStop()" title="Normal Stop: Unload 40 kW/s -> Cooldown -> Slow Roll">■ Stop</button>
+      <button class="btn btn-red" onclick="cmdEStop()" title="Emergency Stop SB0400 (Fast Stop Lockout)">⏻ E-STOP</button>
     </div>
   </header>
 
@@ -560,44 +729,44 @@ canvas.polar-canvas {
         <svg id="three-leaders"></svg>
         <div id="three-labels"></div>
         <div id="three-fallback">
-          <strong style="color:#f59e0b;font-size:14px;">Không tải được thư viện Three.js từ CDN (mất kết nối mạng)</strong>
-          <span>Mô phỏng 2D DCS / P&amp;ID vẫn hoạt động 100% offline. Hãy kết nối Internet hoặc chuyển sang tab "3. TT4000 HMI".</span>
+          <strong style="color:#f59e0b;font-size:14px;">Unable to load Three.js library from CDN (network offline)</strong>
+          <span>2D DCS / P&amp;ID simulation remains 100% functional offline. Connect to the internet or switch to "3. TT4000 HMI".</span>
         </div>
 
         <!-- 3D Top Floating Controls -->
         <div class="hud-3d-top">
           <div class="hud-group">
-            <span class="hud-label">Vỏ:</span>
-            <button class="btn btn-sm" id="btnEnclSolid" onclick="setEnclosureMode('solid')">Đóng</button>
+            <span class="hud-label">Encl:</span>
+            <button class="btn btn-sm" id="btnEnclSolid" onclick="setEnclosureMode('solid')">Solid</button>
             <button class="btn btn-sm active-toggle" id="btnEnclXray" onclick="setEnclosureMode('xray')">X-Ray</button>
-            <button class="btn btn-sm" id="btnEnclHide" onclick="setEnclosureMode('hide')">Ẩn</button>
+            <button class="btn btn-sm" id="btnEnclHide" onclick="setEnclosureMode('hide')">Hide</button>
           </div>
           <div class="hud-group">
-            <button class="btn btn-sm active-toggle" id="btnCutaway" onclick="toggleCutaway()">✂ Cắt bổ</button>
-            <span class="hud-label" style="margin-left:2px;">Tách:</span>
+            <button class="btn btn-sm active-toggle" id="btnCutaway" onclick="toggleCutaway()">✂ Cutaway</button>
+            <span class="hud-label" style="margin-left:2px;">Explode:</span>
             <input type="range" id="explodeSlider" class="mini-slider" min="0" max="100" value="0" oninput="setExplode(this.value)" style="width:60px;" />
             <span id="explodeVal" style="font-family:var(--mono);font-size:9.5px;width:26px;">0%</span>
           </div>
           <div class="hud-group">
-            <button class="btn btn-sm active-toggle" id="btnParticles" onclick="toggleParticles()">✦ Hạt</button>
-            <button class="btn btn-sm active-toggle" id="btnLabels" onclick="toggleLabels()">🏷 Tên 3D</button>
-            <button class="btn btn-sm" id="btnPauseSim" onclick="togglePauseSim()" title="Tạm dừng / Tiếp tục">⏸</button>
-            <button class="btn btn-sm" id="btnAutoOrbit" onclick="toggleAutoOrbit()" title="Tự động xoay 3D mượt mà">🔄</button>
-            <select id="caseSelect" class="ctrl-select" onchange="activateGuidedCase(this.value)" title="Chọn Case để xem hướng dẫn & Cause-Effect" style="max-width:165px;height:24px;padding:1px 6px;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-              <option value="">📖 Chọn Case hướng dẫn...</option>
-              <option value="CASE_START">▶ Case: Khởi động 8 bước</option>
-              <option value="CASE_DUALFUEL">🔄 Case: Đổi Gas ↔ Diesel</option>
-              <option value="CASE_STOP">■ Case: Dừng &amp; Slow Roll</option>
-              <option value="CH1">⚡ CH-1: Tụt áp Gas PS2106</option>
-              <option value="CH2">⚡ CH-2: Trip Quạt AXH M3220</option>
-              <option value="CH3">⚡ CH-3: Trip Quạt Vỏ M6211</option>
-              <option value="CH4">⚡ CH-4: Rò Gas 25% LEL (ATEX)</option>
-              <option value="CH5">🔥 CH-5: Cháy &amp; Phun sương Marioff</option>
+            <button class="btn btn-sm active-toggle" id="btnParticles" onclick="toggleParticles()">✦ Flow</button>
+            <button class="btn btn-sm active-toggle" id="btnLabels" onclick="toggleLabels()">🏷 3D Tags</button>
+            <button class="btn btn-sm" id="btnPauseSim" onclick="togglePauseSim()" title="Pause / Resume Simulation">⏸</button>
+            <button class="btn btn-sm" id="btnAutoOrbit" onclick="toggleAutoOrbit()" title="Smooth Auto-Orbit Camera">🔄</button>
+            <select id="caseSelect" class="ctrl-select" onchange="activateGuidedCase(this.value)" title="Select a Guided Case for walkthrough & Cause-Effect" style="max-width:165px;height:24px;padding:1px 6px;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+              <option value="">📖 Select Guided Case...</option>
+              <option value="CASE_START">▶ Case: 8-Step Cold Start</option>
+              <option value="CASE_DUALFUEL">🔄 Case: Gas ↔ Diesel Transfer</option>
+              <option value="CASE_STOP">■ Case: Cooldown &amp; Slow Roll</option>
+              <option value="CH1">⚡ CH-1: Fuel Gas Drop PS2106</option>
+              <option value="CH2">⚡ CH-2: AXH Fan Trip M3220</option>
+              <option value="CH3">⚡ CH-3: Encl Vent Trip M6211</option>
+              <option value="CH4">⚡ CH-4: Gas Leak 25% LEL (ATEX)</option>
+              <option value="CH5">🔥 CH-5: Fire &amp; Marioff Mist</option>
             </select>
           </div>
         </div>
 
-        <!-- Floating Equipment Detail Drawer (Click any 3D assembly or label!) -->
+        <!-- Floating Equipment Detail Drawer (Legacy quick drawer) -->
         <div id="equipDrawer" class="equip-drawer hidden"></div>
 
         <!-- Floating Guided Case & Cause-Effect Walkthrough Card -->
@@ -605,21 +774,21 @@ canvas.polar-canvas {
 
         <!-- 3D Camera Presets -->
         <div class="hud-3d-cams">
-          <button class="btn btn-sm" onclick="setCameraPreset('overview')">Tổng thể</button>
-          <button class="btn btn-sm" onclick="setCameraPreset('turbine')">Cắt bổ Tuabin</button>
-          <button class="btn btn-sm" onclick="setCameraPreset('combustor')">Buồng đốt &amp; T5</button>
-          <button class="btn btn-sm" onclick="setCameraPreset('generator')">Máy phát Kato</button>
-          <button class="btn btn-sm" onclick="setCameraPreset('cooler')">Air Cooler AXH</button>
-          <button class="btn btn-sm" onclick="setCameraPreset('exhaust')">Ống xả Cullum</button>
+          <button class="btn btn-sm" onclick="setCameraPreset('overview')">Overview</button>
+          <button class="btn btn-sm" onclick="setCameraPreset('turbine')">Cutaway Turbine</button>
+          <button class="btn btn-sm" onclick="setCameraPreset('combustor')">Combustor &amp; T5</button>
+          <button class="btn btn-sm" onclick="setCameraPreset('generator')">Kato Generator</button>
+          <button class="btn btn-sm" onclick="setCameraPreset('cooler')">AXH Air Cooler</button>
+          <button class="btn btn-sm" onclick="setCameraPreset('exhaust')">Cullum Exhaust</button>
         </div>
 
         <!-- 3D Flow Legend -->
         <div class="hud-3d-legend">
-          <span><i class="leg-dot" style="background:#38bdf8"></i>Khí nạp</span>
-          <span><i class="leg-dot" style="background:#fb923c"></i>Khí nén / Xả</span>
-          <span><i class="leg-dot" style="background:#22c55e"></i>Khí Gas</span>
-          <span><i class="leg-dot" style="background:#eab308"></i>Dầu bôi trơn</span>
-          <span><i class="leg-dot" style="background:#e0f2fe"></i>Sương Marioff</span>
+          <span><i class="leg-dot" style="background:#38bdf8"></i>Intake Air</span>
+          <span><i class="leg-dot" style="background:#fb923c"></i>Compressed / Exh Gas</span>
+          <span><i class="leg-dot" style="background:#22c55e"></i>Fuel Gas</span>
+          <span><i class="leg-dot" style="background:#eab308"></i>Lube Oil</span>
+          <span><i class="leg-dot" style="background:#e0f2fe"></i>Marioff Mist</span>
         </div>
       </div>
 
@@ -651,29 +820,29 @@ canvas.polar-canvas {
     <!-- === PANE 2: 3D ANATOMY INSPECTOR (Visible in Mode 1) === -->
     <aside id="pane-inspector">
       <div class="panel-hdr">
-        <span>🔍 TRA CỨU CẤU TẠO &amp; THÔNG SỐ THIẾT BỊ</span>
-        <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">Click 3D hoặc chọn</span>
+        <span>🔍 EQUIPMENT ANATOMY &amp; SPECS</span>
+        <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">Click 3D or select</span>
       </div>
       <div class="inspector-body">
         <div id="compChips" class="comp-chip-list"></div>
         <div id="inspectorDetail" class="spec-card"></div>
         <div class="spec-card">
-          <h4>Điều khiển Nhanh Chu trình (Anatomy Mode)</h4>
+          <h4>Quick Cycle Controls (Anatomy Mode)</h4>
           <div class="fp-row" style="margin-top:6px;">
-            <span style="color:var(--muted);">Tải máy phát (kW):</span>
+            <span style="color:var(--muted);">Generator Load (kW):</span>
             <input type="range" id="anatLoadSlider" min="0" max="6200" step="50" value="4650" style="width:120px;accent-color:var(--green);" oninput="setLoadSetpoint(parseFloat(this.value))" />
             <span id="anatLoadVal" style="font-family:var(--mono);font-weight:700;">4650</span>
           </div>
           <div class="fp-row">
-            <span style="color:var(--muted);">Nhiên liệu (Dual-Fuel):</span>
+            <span style="color:var(--muted);">Fuel Selection (Dual-Fuel):</span>
             <div style="display:flex;gap:4px;">
               <button class="btn btn-sm btn-green" onclick="cmdFuelTransfer('GAS')">Gas Fuel</button>
               <button class="btn btn-sm btn-amber" onclick="cmdFuelTransfer('LIQUID')">Diesel Fuel</button>
             </div>
           </div>
           <div class="fp-row" style="margin-bottom:0;">
-            <span style="color:var(--muted);">Thử phản ứng 3D:</span>
-            <button class="btn btn-sm btn-red" onclick="triggerFault('CH5')">🔥 Thử Phun sương Marioff</button>
+            <span style="color:var(--muted);">Test 3D Protection:</span>
+            <button class="btn btn-sm btn-red" onclick="triggerFault('CH5')">🔥 Test Marioff Water Mist</button>
           </div>
         </div>
       </div>
@@ -686,7 +855,7 @@ canvas.polar-canvas {
         <button class="dcs-tab" data-tab="fuel" onclick="setDcsTab('fuel')">2. Dual-Fuel</button>
         <button class="dcs-tab" data-tab="lube" onclick="setDcsTab('lube')">3. Lube/AXH</button>
         <button class="dcs-tab" data-tab="genfg" onclick="setDcsTab('genfg')">4. Gen &amp; F&amp;G</button>
-        <button class="dcs-tab" data-tab="cematrix" onclick="setDcsTab('cematrix')">🔗 Ma trận C&amp;E</button>
+        <button class="dcs-tab" data-tab="cematrix" onclick="setDcsTab('cematrix')">🔗 C&amp;E Matrix</button>
         <button class="dcs-tab tab-fault" data-tab="faults" onclick="setDcsTab('faults')">⚡ Cases (8)</button>
       </div>
 
@@ -733,7 +902,7 @@ canvas.polar-canvas {
               </div>
             </div>
             <div class="fp-row">
-              <span style="font-size:10px;color:var(--muted);">CHẾ ĐỘ &amp; 52G:</span>
+              <span style="font-size:10px;color:var(--muted);">MODE &amp; 52G:</span>
               <div style="display:flex;gap:3px;">
                 <button class="btn btn-sm btn-cyan" id="btnGovMode" onclick="toggleGovMode()">ISOCH</button>
                 <button class="btn btn-sm btn-green" id="btnSync52G" onclick="cmdToggleBreaker()">52G: CLOSED</button>
@@ -752,7 +921,7 @@ canvas.polar-canvas {
           <!-- Faceplate 2: Auxiliary Equipment Start/Stop -->
           <div class="fp-box">
             <div class="fp-title">
-              <span>⚙ THIẾT BỊ PHỤ TRỢ (START / STOP)</span>
+              <span>⚙ AUXILIARY EQUIPMENT (START / STOP)</span>
               <span style="font-size:9.5px;color:var(--muted);">3×50% Cooler · 2×100% Vent</span>
             </div>
             <div id="auxEquipList"></div>
@@ -761,7 +930,7 @@ canvas.polar-canvas {
           <!-- Real-Time Multi-Channel Trend -->
           <div class="fp-box">
             <div class="fp-title">
-              <span>📈 TREND · 2 PHÚT</span>
+              <span>📈 TREND · 2 MIN</span>
               <span style="font-size:9px;font-family:var(--mono);">
                 <b style="color:#38bdf8">Ngp</b> · <b style="color:#22c55e">kW</b> · <b style="color:#f97316">T5</b> · <b style="color:#eab308">OilT</b>
               </span>
@@ -795,7 +964,7 @@ canvas.polar-canvas {
 
           <!-- Event Log -->
           <div class="fp-box">
-            <div class="fp-title"><span>📋 NHẬT KÝ SỰ KIỆN (EVENT LOG)</span></div>
+            <div class="fp-title"><span>📋 EVENT LOG</span></div>
             <div id="eventList" class="event-list"></div>
           </div>
         </div>
@@ -804,6 +973,13 @@ canvas.polar-canvas {
   </div>
 </div>
 <div id="toast"></div>
+
+<!-- Equipment Anatomy, Operation & Cause-Effect Pop-up Modal -->
+<div id="equipModalBackdrop" class="equip-modal-backdrop hidden" onclick="if(event.target===this)closeEquipModal()">
+  <div id="equipModal" class="equip-modal" role="dialog" aria-modal="true" aria-labelledby="equipModalTitle">
+    <div id="equipModalContent"></div>
+  </div>
+</div>
 
 <!-- Multi-CDN Three.js r128 loader -->
 <script>
@@ -830,8 +1006,8 @@ function loadThreeWithFallback(cb) {
 <script>
 /* ============================================================================
    STEP 1 (P&ID -> EMBEDDED JSON): MEC006 SOLAR TAURUS 70 PROJECT DATA MODEL
-   Nhúng trực tiếp JSON vào HTML để mở offline không cần server (không lỗi CORS)
-   Nguồn: PQ-CPPT-MEC006-D45-00001 (P&ID), D08-00001 (MID), M01-00001 (OEM),
+   Embedded directly as JSON inside HTML for 100% offline execution (no CORS errors)
+   Source: PQ-CPPT-MEC006-D45-00001 (P&ID), D08-00001 (MID), M01-00001 (OEM),
           G07-00001/2 (Datasheets), Air Cooler IOM (AXH 48-3ZF), Cullum PJ20786
    ============================================================================ */
 const MEC006_PID_DATA = {
@@ -854,282 +1030,492 @@ const MEC006_PID_DATA = {
   },
   components: [
     {
-      id: "inlet", shortName: "Lọc gió Camfil", tag: "ASY6310", name: "Lọc gió Đầu vào Camfil (Air Inlet)", pidSheet: "P&ID Sht 11",
+      id: "inlet", shortName: "Camfil Air Inlet", tag: "ASY6310", name: "Camfil Offshore Air Inlet Filtration & Silencer House", pidSheet: "P&ID Sht 11",
       pos3d: [-1.4, 4.1, 0], relatedCase: "CASE_START",
-      role: "Lọc sạch bụi mịn, hơi muối biển ngoài khơi và giảm ồn dòng khí nạp trước khi đưa vào tầng đầu của máy nén 14 tầng.",
+      role: "Filters offshore salt mist, hydrocarbon aerosols, and fine particulates from ambient air, while attenuating compressor intake noise before air enters the 14-stage axial compressor.",
+      purpose: "Prevents blade erosion, salt fouling, and compressor efficiency degradation (PCD drop) in marine offshore service, protecting hot-section metallurgy from sodium-induced sulfidation corrosion.",
+      construction: [
+        "Marine-grade 316L stainless steel weather hood and inertial mist eliminator vanes.",
+        "20× Camfil F6310 high-efficiency cartridge filter elements paired with 20× pre-filter bag elements and a baffled intake silencer (NR6300).",
+        "Differential pressure transmitter PDT6310 across the filter bank, RTD temperature sensor TE1110, and 3× perimeter IR gas detectors (DTG6567–69) inside the inlet plenum."
+      ],
+      operation: [
+        "15,200 rpm axial compressor suction draws up to 45,741 ACFM of air downward through the inertial louvers, pre-filters, fine F6310 cartridges, and acoustic splitter baffles.",
+        "As salt or dust accumulates, PDT6310 rises continuously; drainage connection Conn 22 evacuates separated moisture continuously.",
+        "TE1110 feeds compressor inlet temperature T1 to Turbotronic™ 6 for power derating and Variable Guide Vane (VGV) scheduling."
+      ],
       features: [
-        "20 lõi lọc F6310 kết hợp túi lọc sơ cấp + tiêu âm NR6300.",
-        "Cảm biến chênh áp PDT6310 cảnh báo tắc lọc ở ≥ 5 inH₂O và cắt máy bảo vệ ở ≥ 7 inH₂O.",
-        "Tích hợp 3 đầu dò khí Gas DTG6567–69 phát hiện đám mây khí ngoài giàn xâm nhập đường hút."
+        "20× F6310 fine filter elements + pre-filter bags + NR6300 acoustic silencer.",
+        "PDT6310 ΔP monitoring alarms at ≥ 5 inH₂O and initiates protective shutdown at ≥ 7 inH₂O.",
+        "3× IR hydrocarbon gas detectors (DTG6567–69) detect platform gas plumes before ingestion into the compressor."
       ],
-      ceLinks: { cause: "Tắc lọc PDT6310 ≥ 7 inH₂O hoặc DTG6567 phát hiện 25% LEL", effect: "Cắt máy Cooldown/Fast Stop bảo vệ máy nén khỏi sụt áp & cháy nổ" },
+      ceLinks: {
+        cause: "Filter plugging PDT6310 ≥ 7 inH₂O OR inlet gas ingestion DTG6567–69 ≥ 25% LEL (2oo3).",
+        logic: "Det-Tronics EQP (LON Ring) / GuardLogix 1756-L83EXTS drops permit relays KA0235–50.",
+        effect: "Immediate Fast Stop Lockout: cuts 52G breaker, trips fuel shutoff valves AV2120/24 & AV2220/22, prevents compressor surge or intake explosion."
+      },
       specs: [
-        ["Nhà sản xuất", "Camfil (P/N 1089700-4J731)"],
-        ["Phần tử lọc", "20× F6310 + 20× túi lọc + tiêu âm NR6300"],
-        ["Lưu lượng khí tối đa", "45,741 ACFM (1,295 m³/min) @ 15°C"],
-        ["Đo chênh áp PDT6310", "Alarm ≥ 5 inH₂O · Shutdown ≥ 7 inH₂O"],
-        ["Cảm biến nhiệt độ", "TE1110 (Pt100 RTD) · Khí Gas DTG6567–69"]
+        ["OEM / Part No.", "Camfil (P/N 1089700-4J731)"],
+        ["Filter Stage", "20× F6310 Cartridges + 20× Bag Prefilters + NR6300 Silencer"],
+        ["Max Air Flow", "45,741 ACFM (1,295 m³/min) @ 15°C"],
+        ["Filter ΔP (PDT6310)", "High Alarm ≥ 5 inH₂O · Shutdown ≥ 7 inH₂O"],
+        ["Instrumentation", "TE1110 (Pt100 RTD) · Gas Detectors DTG6567–69"]
       ],
-      warnings: ["Không sử dụng ống mạ kẽm (galvanized) cho hệ thống khí nạp & nước rửa. Đảm bảo ống thoát nước đáy (Conn 22) thông thoáng trước khi khởi động."],
+      warnings: ["Never use galvanized piping anywhere on intake air or compressor wash lines. Verify bottom drain (Conn 22) is clear of obstructions before every start."],
       liveKeys: ["ambientC", "pdt6310"]
     },
     {
-      id: "starter", shortName: "Khởi động AC", tag: "M1300 / UF1300", name: "Hệ thống Khởi động AC Trực tiếp (Start System)", pidSheet: "P&ID Sht 2 · PIL 149",
+      id: "starter", shortName: "AC Starter", tag: "M1300 / UF1300", name: "Direct-Drive VFD AC Starting & Slow-Roll System", pidSheet: "P&ID Sht 2 · PIL 149",
       pos3d: [-5.1, 1.85, 0], relatedCase: "CASE_START",
-      role: "Cung cấp mô-men quay kéo trục tuabin từ 0% lên 68% Ngp khi khởi động, quay thổi sạch (Purge) và quay chậm chống cong trục (Slow Roll) khi dừng.",
+      role: "Provides controlled mechanical torque to accelerate the gas turbine shaft from 0% to ~68% Ngp during start-up, execute purge cranking, and rotate the cooling shaft slowly after shutdown.",
+      purpose: "Ensures a safe, explosive-free combustor/exhaust gas path before ignition (15% Ngp purge), overcomes compressor aerodynamic drag up to self-sustaining speed, and prevents thermal rotor bowing after shutdown.",
+      construction: [
+        "150 HP (112 kW) Baldor explosion-proof AC motor (M1300, 380V 3-phase 90 Hz, 213 A) coupled directly to the accessory/main gearbox.",
+        "Powered by an Allen-Bradley PowerFlex 755 Frame 8 VFD (UF1300, 315 kW) for closed-loop torque and speed profiling.",
+        "One-way mechanical overrunning sprag clutch that locks during driving torque and disengages mechanically once the turbine outruns the motor."
+      ],
+      operation: [
+        "Step 1 (Crank & Purge): UF1300 ramps M1300 to 15% Ngp (~2,280 rpm) to sweep at least 3× air volume changes through the combustor and Cullum exhaust stack.",
+        "Step 2 (Light-Off & Assist): Once T5 ≥ 204°C confirms ignition, M1300 assists turbine torque up to 65–70% Ngp until the one-way clutch automatically drops out (Starter Dropout).",
+        "Step 3 (Slow Roll): After Normal Stop cooldown, M1300 re-engages below 25% Ngp to turn the shaft at 3–15% Ngp for up to 4 hours."
+      ],
       features: [
-        "Động cơ AC Baldor 150 HP cấp qua biến tần PowerFlex 755 (UF1300) và khớp ly hợp một chiều.",
-        "Tự động quay Crank ở 15% Ngp để Purge buồng đốt & ống xả trước khi đánh lửa.",
-        "Tự động tách ly hợp (Starter Dropout) khi tuabin tự tăng tốc vượt 65–70% Ngp."
+        "Baldor 150 HP motor fed by PowerFlex 755 VFD (UF1300) through an overrunning sprag clutch.",
+        "Automatic 15% Ngp purge crank precedes torch ignition on every start sequence.",
+        "Automatic mechanical/electrical Starter Dropout at 65–70% Ngp when turbine reaches self-sustaining speed."
       ],
-      ceLinks: { cause: "Lệnh Start (M1300 RUN) hoặc Dừng < 25% Ngp (Slow Roll)", effect: "Kéo trục 15% Ngp Purge / 15% Slow Roll; quá nhiệt motor ≥160°C khóa 30 phút" },
+      ceLinks: {
+        cause: "Start Sequence Command OR Normal Stop shaft coastdown < 25% Ngp OR M1300 winding ≥ 160°C.",
+        logic: "Turbotronic™ 6 sequences VFD speed setpoint (15% Purge / Assist / Slow Roll) and monitors motor RTD thermal switch.",
+        effect: "Cranks rotor smoothly for purge/start/slow-roll; winding overtemperature ≥ 160°C trips VFD and enforces a 30-minute lockout timer."
+      },
       specs: [
-        ["Động cơ khởi động M1300", "Baldor 150 HP (112 kW), 380V 3-ph 90Hz, 213 A"],
-        ["Biến tần VFD UF1300", "PowerFlex 755 Frame 8 (315 kW / 369.3 kVA)"],
-        ["Chu kỳ khởi động", "Tối đa 3 lần liên tiếp (nghỉ 10 phút giữa các lần)"],
-        ["Tách ly hợp (Dropout)", "65–70% Ngp (khớp ly hợp một chiều)"],
-        ["Chế độ Slow Roll", "3–15% Ngp tối đa 4 giờ sau dừng máy"]
+        ["Starter Motor M1300", "Baldor 150 HP (112 kW), 380V 3-ph 90Hz, 213 A"],
+        ["Drive UF1300", "PowerFlex 755 Frame 8 VFD (315 kW / 369.3 kVA)"],
+        ["Duty Cycle Limit", "Max 3 consecutive starts (10-min cooldown between tries)"],
+        ["Starter Dropout", "65–70% Ngp (overrunning sprag clutch release)"],
+        ["Slow Roll Mode", "3–15% Ngp for up to 4 hours post-shutdown"]
       ],
-      warnings: ["CẢNH BÁO: Tuyệt đối KHÔNG bảo trì tuabin hoặc máy phát khi tổ máy đang chạy ở chế độ Slow Roll. Quá nhiệt motor ≥ 160°C khóa khởi động 30 phút."],
+      warnings: ["SAFETY WARNING: NEVER perform maintenance on the turbine or generator while the unit is in Slow Roll mode. Motor overtemperature ≥ 160°C locks out starting for 30 minutes."],
       liveKeys: ["starterOn", "ngp"]
     },
     {
-      id: "compressor", shortName: "Máy nén 14 tầng", tag: "T70-COMP", name: "Máy nén Dọc trục 14 Tầng & Cánh VGV", pidSheet: "P&ID Sht 3 · OEM Ch.8",
+      id: "compressor", shortName: "14-Stg Compressor", tag: "T70-COMP", name: "14-Stage Axial Compressor, VGV & Surge Bleed System", pidSheet: "P&ID Sht 3 · OEM Ch.8",
       pos3d: [-1.8, 1.85, 0], relatedCase: "CASE_START",
-      role: "Nén không khí nạp qua 14 tầng cánh dọc trục đạt tỷ số nén 16:1 (PCD ~14–16 barg) cấp cho buồng đốt SoLoNOx và trích khí làm mát tầng tuabin.",
+      role: "Compresses filtered inlet air across 14 axial rotor/stator stages to a 16:1 pressure ratio (PCD ~14.2–16 barg), supplying primary combustion air and cooling/sealing bleed streams.",
+      purpose: "Maximizes Brayton-cycle thermal efficiency and mass flow stability across wide ambient temperatures (22.5°C–36.4°C) while preventing destructive aerodynamic stall or surge during acceleration and load rejection.",
+      construction: [
+        "14-stage single-shaft axial flow compressor running at 15,200 rpm rated speed, monitored by dual redundant PCD pressure transmitters PT1120/1121.",
+        "Variable Guide Vanes (VGV stages 1–5) driven by a 120 VDC fail-closed electric actuator (FCE1440) indexing from -47° to +5°.",
+        "Pneumatic/spring-return fail-open Compressor Bleed Valve (FCE1420, Meggitt/Metso) plus On-Line/On-Crank wash injection ring (R1700 / SV1710–20) and bearing vibration probes VE1210–21."
+      ],
+      operation: [
+        "Start / Low Speed (< 85% Ngp): VGV stays near -47° (throttled) and Bleed Valve FCE1420 opens to vent excess front-stage air, eliminating rotating stall.",
+        "Acceleration & On-Load (85–100% Ngp): Bleed Valve FCE1420 closes fully; VGV opens progressively along the T1/Ngp map to +5°, boosting PCD to ~14.2 barg.",
+        "Wash Maintenance: When fouling reduces PCD by ≥ 2.5%, On-Line or On-Crank detergent washing restores airfoil cleanliness."
+      ],
       features: [
-        "Cánh hướng dòng biến thiên VGV (tầng 1–5, FCE1440) đóng -47° lúc khởi động và mở dần tới +5° ở 95% Ngp để tránh rung stall.",
-        "Van xả khí nén Bleed Valve FCE1420 (fail-open) mở khi < 85% Ngp để chống Surge cho máy nén.",
-        "Tích hợp đầu phun rửa nén On-Line & On-Crank (R1700 / SV1710–20) phục hồi hiệu suất khi PCD tụt ≥ 2.5%."
+        "Stages 1–5 Variable Guide Vanes (FCE1440) track smoothly from -47° at crank to +5° at rated speed.",
+        "Fail-open Bleed Valve FCE1420 vents compressor interstage flow below 85% Ngp and during trips.",
+        "Dual radial shaft vibration probes VE1210–21 at Bearing #1/#2 (Alarm 3.0 mils / Trip 4.0 mils p-p)."
       ],
-      ceLinks: { cause: "Tốc độ Ngp < 85% hoặc Lỗi truyền động VGV/Bleed (> 2s)", effect: "Bleed Valve FCE1420 mở xả chống Surge; lệch vị trí VGV > 10% gây Fast Stop" },
+      ceLinks: {
+        cause: "Speed < 85% Ngp OR Load Dump OR VGV tracking error > 10% for > 2 s OR Vib ≥ 4.0 mils.",
+        logic: "Turbotronic™ 6 closes FCE1420 only above 85% Ngp; GuardLogix compares FCE1440/1420 position feedback against demand.",
+        effect: "Normal < 85% opens Bleed Valve to prevent surge; VGV/Bleed mismatch > 2 s or high shaft vibration triggers immediate Fast Stop."
+      },
       specs: [
-        ["Cấu tạo", "14 tầng dọc trục · Tỷ số nén 16:1 · 15,200 rpm"],
-        ["Cánh hướng dòng VGV", "Tầng 1–5 (FCE1440, 120 VDC, fail-closed: -47° → +5°)"],
-        ["Van xả chống Surge", "Bleed Valve FCE1420 (Meggitt/Metso, fail-open)"],
-        ["Áp suất đẩy PCD", "PT1120/1121 (0–48.3 barg) · Trigger rửa máy: -2.5% PCD"],
-        ["Độ rung ổ trục #1/#2", "VE1210–21 (Hi 3.0 mils p-p / SD 4.0 mils p-p)"]
+        ["Configuration", "14-Stage Axial · 16:1 Pressure Ratio · 15,200 rpm"],
+        ["VGV System", "Stages 1–5 (FCE1440, 120 VDC fail-closed: -47° to +5°)"],
+        ["Anti-Surge Valve", "Bleed Valve FCE1420 (Meggitt/Metso, fail-open)"],
+        ["Discharge PCD", "PT1120/1121 (0–48.3 barg) · Wash Trigger: -2.5% PCD"],
+        ["Bearing Vibration", "VE1210–21 (Hi Alarm 3.0 mils p-p · SD 4.0 mils p-p)"]
       ],
-      warnings: ["QUAN TRỌNG (SB 8.0/138B): Khi rửa On-Crank phải làm nguội ≥ 8 giờ (< 65°C), lắp tấm bịt trích khí tầng 6 & cấp khí phớt 40 psig. BẮT BUỘC tháo tấm bịt trước khi chạy lại!"],
+      warnings: ["CRITICAL (SB 8.0/138B): Prior to On-Crank Wash, cool engine ≥ 8 hours (< 65°C), install the 6th-stage bleed blind plate, and apply 40 psig seal air. ALWAYS remove the blind plate before restart!"],
       liveKeys: ["pcd", "vgvDeg", "bleedPos"]
     },
     {
-      id: "combustor", shortName: "Buồng đốt SoLoNOx", tag: "SoLoNOx-COMB", name: "Buồng đốt Vòng SoLoNOx & 12 Vòi phun Kép", pidSheet: "P&ID Sht 4–6",
+      id: "combustor", shortName: "SoLoNOx Combustor", tag: "SoLoNOx-COMB", name: "Annular SoLoNOx Combustor & 12 Dual-Fuel Injectors", pidSheet: "P&ID Sht 4–6",
       pos3d: [-0.2, 1.85, 0], relatedCase: "CASE_DUALFUEL",
-      role: "Trộn khí nén áp suất cao từ máy nén với nhiên liệu Khí hoặc Diesel qua 12 vòi phun vòng, đốt cháy sạch phát thải NOx thấp.",
+      role: "Mixes 14.2 barg compressed air with fuel gas or diesel across 12 lean-premixed injectors, sustaining stable low-emission combustion up to ~1,085°C firing temperature.",
+      purpose: "Achieves stringent offshore NOx/CO emission compliance (SoLoNOx lean-premix) while permitting seamless bumpless Dual-Fuel transfers at > 90% Ngp without dropping CPPT platform electrical load.",
+      construction: [
+        "Single annular effusion-cooled alloy liner encircled by 12 dual-fuel injectors (P/N 302218-101) featuring integrated pilot/main passages.",
+        "High-energy Torch Igniter assembly (BE1020 / LZ1020) for reliable light-off during start-up.",
+        "Combustor differential pressure switch/transmitter PDS1500 plus Continuous-Cooled PCD Forward & Backward Purge manifolds (HE2645 / TE2645)."
+      ],
+      operation: [
+        "Ignition: At ~15% Ngp post-purge, Torch Igniter LZ1020 fires and T5 thermocouple rise ≥ 204°C proves flame within 10 seconds.",
+        "Gas / Liquid Operation: Fuel modulation adjusts equivalence ratio across pilot and main zones; active PCD purge sweeps inactive liquid or gas tips to prevent coking.",
+        "Dual-Fuel Transfer (> 90% Ngp): Ramps incoming fuel pressure/flow while ramping out outgoing fuel in closed-loop load control."
+      ],
       features: [
-        "Ngọn lửa mồi Torch Igniter (BE1020/LZ1020) đánh lửa và xác nhận cháy khi T5 ≥ 204°C (400°F).",
-        "12 vòi phun kép hỗ trợ chuyển đổi online giữa Gas và Diesel khi tải vận hành > 90% Ngp.",
-        "Cảm biến chênh áp PDS1500 phát hiện tắt lửa (Flameout) tức thì, đồng thời liên động hệ thống thổi sạch PCD Purge."
+        "Torch Igniter (BE1020/LZ1020) confirmed by T5 ≥ 204°C (400°F) light-off detection.",
+        "12 dual-fuel injectors support online Gas ↔ Diesel transfer above 90% Ngp.",
+        "PDS1500 ΔP sensor detects instant Flameout, interlocked with Continuous-Cooled PCD Purge."
       ],
-      ceLinks: { cause: "Flameout PDS1500 (2 psid) hoặc Lỗi PCD Forward Purge > 60 phút", effect: "Đóng tức thì van ngắt AV2120/24 & AV2220/22 → Fast Stop Lockout" },
+      ceLinks: {
+        cause: "Flameout (PDS1500 < 2 psid) OR Gas Supply Drop (PS2106 < 4.48 barg) OR TE2645 Purge fault > 60 min.",
+        logic: "SIS/Turbotronic™ 6 verifies Ngp > 90% for Dual-Fuel transfer; Flameout drops ESD fuel relays immediately.",
+        effect: "Flameout shuts AV2120/24 & AV2220/22 (< 100 ms); TE2645 forward-purge fault triggers 60-min timer to swap to Diesel or Shutdown."
+      },
       specs: [
-        ["Kiểu buồng đốt", "Vòng (Annular) phát thải thấp SoLoNOx"],
-        ["Hệ vòi phun", "12 vòi phun nhiên liệu kép Gas/Diesel (P/N 302218-101)"],
-        ["Đánh lửa & Phát hiện tắt lửa", "Torch Igniter BE1020/LZ1020 · PDS1500 (SD 2 psid)"],
-        ["Chuyển nhiên liệu", "Gas ↔ Liquid chỉ cho phép khi Ngp > 90%"],
-        ["Hệ thống thổi sạch", "Continuous-Cooled-Pcd-Forward (HE2645) & Backward Purge"]
+        ["Combustor Type", "Dry Low-Emission Annular SoLoNOx"],
+        ["Fuel Injectors", "12× Dual-Fuel Gas/Liquid Injectors (P/N 302218-101)"],
+        ["Ignition & Flame", "Torch Igniter BE1020/LZ1020 · Flameout PDS1500 (2 psid SD)"],
+        ["Dual-Fuel Window", "Online Gas ↔ Diesel transfer permitted only at Ngp > 90%"],
+        ["Nozzle Purge", "Continuous-Cooled PCD Forward (HE2645) & Backward Purge"]
       ],
-      warnings: ["Nếu TE2645 (> 204°C) hoặc đường PCD Forward Purge lỗi khi chạy Gas, chỉ được vận hành tối đa 60 phút trước khi phải dừng hoặc chuyển sang Diesel."],
+      warnings: ["If TE2645 (> 204°C) or Continuous-Cooled PCD Forward Purge fails during Gas operation, running time is strictly capped at 60 minutes before mandatory transfer to Diesel or Shutdown."],
       liveKeys: ["fuelMode", "combTemp", "fuelValveOp"]
     },
     {
-      id: "turbine", shortName: "Tuabin 3 tầng", tag: "T70-TURB", name: "Tuabin Phản lực 3 Tầng & 12 Cảm biến T5", pidSheet: "P&ID Sht 4 · OEM Ch.8",
+      id: "turbine", shortName: "3-Stg Turbine", tag: "T70-TURB", name: "3-Stage Reaction Turbine, 12× T5 Array & SIL-3 Overspeed", pidSheet: "P&ID Sht 4 · OEM Ch.8",
       pos3d: [1.1, 1.85, 0], relatedCase: "CASE_START",
-      role: "Giãn nở dòng khí nóng áp suất cao từ buồng đốt qua 3 tầng cánh phản lực để tạo công cơ học 7,958 kW (ISO) quay máy nén và hộp giảm tốc ở 15,200 rpm.",
+      role: "Expands high-temperature combustion gas through 3 reaction stages to produce 7,958 kW (ISO) shaft power at 15,200 rpm, driving the compressor, accessory gearbox, and Kato generator.",
+      purpose: "Converts thermal enthalpy into mechanical shaft torque reliably while protecting rotating airfoil integrity against circumferential hot streaks (clogged injectors), thrust failure, and catastrophic overspeed.",
+      construction: [
+        "Single-shaft 3-stage axial reaction turbine (Stages 1 & 2 air-cooled via compressor bleed; Stage 3 uncooled superalloy blades).",
+        "Circumferential ring of 12 Type-N thermocouples (TE1150–1161) measuring T5 gas temperature and thermal spread.",
+        "Dual-channel SIL 2/3 overspeed sensors (GuardLogix SE1260 + independent hardwired Backup Overspeed BUOS UA1200/SE1261) and thrust bearing monitor TE1260 / VE1262."
+      ],
+      operation: [
+        "Hot gas (~1,085°C) expands sequentially across Stages 1–3, dropping to ~540°C exhaust while maintaining 15,200 rpm (100% Ngp) under Isochronous or Droop governor control.",
+        "Turbotronic™ 6 scans all 12 T5 thermocouples continuously, computing T5 Average and Max–Min Spread.",
+        "SE1260 and BUOS UA1200 independently count toothed-wheel magnetic pulses every millisecond."
+      ],
       features: [
-        "Vòng 12 cặp nhiệt điện T5 (TE1150–1161) đo phân bố nhiệt chu vi để phát hiện tắc vòi phun (Spread > 111°C) hoặc quá nhiệt (> 20s).",
-        "Bảo vệ quá tốc độc lập SIL 2/3 gồm GuardLogix (SE1260) song song với mạch cứng Backup Overspeed UA1200 (SE1261).",
-        "Ổ chặn dọc trục giám sát nhiệt độ TE1260 (116°C SD) và dịch chuyển trục VE1262."
+        "12-thermocouple T5 ring (TE1150–1161) detects clogged injectors (Spread > 111°C) and overtemperature (> 20 s).",
+        "Independent SIL 2/3 overspeed protection: GuardLogix SE1260 + hardwired BUOS UA1200 (SE1261).",
+        "Thrust bearing temperature TE1260 (116°C SD) and axial displacement VE1262 (-20/+5 mils) protection."
       ],
-      ceLinks: { cause: "Quá tốc SE1260/UA1200 hoặc T5 Hi > 20s / T5 Spread > 111°C", effect: "Mở chuỗi Relay an toàn KA0235–50 → Cắt 52G + Đóng nhiên liệu (FL)" },
+      ceLinks: {
+        cause: "Overspeed ≥ 110% Ngp (SE1260 or UA1200) OR T5 Hi > 20 s OR T5 Spread > 111°C OR Thrust TE1260 ≥ 116°C.",
+        logic: "1oo2 hardwired + SIL 2/3 PLC voting de-energizes safety relay string KA0235–50.",
+        effect: "Immediate Fast Stop Lockout (FL): trips 52G breaker, slams fuel shutoff valves closed, opens compressor bleed valve FCE1420."
+      },
       specs: [
-        ["Cấu tạo", "3 tầng dọc trục một trục (Tầng 1–2 làm mát, Tầng 3 không làm mát)"],
-        ["Tốc độ định mức", "15,200 rpm (Công suất trục ISO 7,958 kW)"],
-        ["Cảm biến nhiệt T5", "12× Type-N TCs (TE1150–1161) · Spread > 111°C (200°F) Trip"],
-        ["Ổ chặn dọc trục", "TE1260 (Hi 110°C / SD 116°C) · VE1262 (-20/+5 mils)"],
-        ["Bảo vệ quá tốc SIL 2/3", "GuardLogix (SE1260) + BUOS độc lập UA1200 (SE1261)"]
+        ["Architecture", "3-Stage Single-Shaft Axial (Stg 1–2 Cooled, Stg 3 Uncooled)"],
+        ["Rated Speed / Power", "15,200 rpm · 7,958 kW ISO Shaft Power"],
+        ["T5 Array (12×)", "Type-N TCs TE1150–1161 · Spread > 111°C (200°F) Trip"],
+        ["Thrust Bearing", "TE1260 (Hi 110°C / SD 116°C) · Axial VE1262 (-20/+5 mils)"],
+        ["Overspeed SIL 2/3", "GuardLogix (SE1260) + Hardwired BUOS UA1200 (SE1261)"]
       ],
-      warnings: ["Kiểm tra định kỳ bộ giám sát quá tốc dự phòng BUOS (UA1200) mỗi 8,000 giờ theo IEC 61508 (giảm điểm đặt 1%/s, phải trip trong 75 s)."],
+      warnings: ["MANDATORY TEST: Proof-test the Backup Overspeed Monitor BUOS (UA1200) every 8,000 operating hours per IEC 61508 (ramp setpoint down at 1%/s; must trip within 75 s)."],
       liveKeys: ["t5Avg", "t5Spread", "ngp"]
     },
     {
-      id: "gearbox", shortName: "Hộp giảm tốc", tag: "GBX-330850", name: "Hộp giảm tốc Hành tinh & Khớp nối Ameridrive", pidSheet: "P&ID Sht 4, 9 · MID Sht 20",
+      id: "gearbox", shortName: "Main Gearbox", tag: "GBX-330850", name: "Epicyclic Star-Gear Reducer & Ameridrive Coupling", pidSheet: "P&ID Sht 4, 9 · MID Sht 20",
       pos3d: [-3.7, 1.85, 0], relatedCase: "CASE_STOP",
-      role: "Giảm tốc độ trục tuabin từ 15,200 rpm xuống 1,500 rpm (tương ứng tần số 50 Hz) truyền tới máy phát qua khớp nối răng Ameridrive và dẫn động bơm dầu chính P3110.",
+      role: "Steps down the turbine's 15,200 rpm speed to 1,500 rpm (50 Hz synchronous speed) to drive the Kato generator via an Ameridrive gear coupling, and mechanically powers the main lube oil pump P3110.",
+      purpose: "Provides coaxial speed reduction with extraordinary torsional strength (API RP 684 FoS = 56.51) and serves as the thermally stable Fixed Reference Point for entire train shaft alignment.",
+      construction: [
+        "Solar Epicyclic Compound Star-Gear unit (P/N 330850-502, 3,044 kg) with hardened sun, star, and ring gears.",
+        "Ameridrive 1098075-100 flexible gear coupling with DBSE = 833.88 ± 0.40 mm connecting low-speed output flange to Kato generator.",
+        "Casing accelerometer VE4765 (Hi 20 / SD 30 mils p-p) and primary speed pickup SE1260."
+      ],
+      operation: [
+        "15,200 rpm input sun gear drives stationary-carrier star gears turning the 1,500 rpm output ring shaft.",
+        "Integrated accessory pad drives shaft-driven main lube oil pump P3110 (185 gpm), eliminating dependency on AC power once running above 65% Ngp.",
+        "Oil spray jets lubricate gear meshes continuously, including during 4-hour Post-Lube."
+      ],
       features: [
-        "Cấu trúc bánh răng hành tinh ngôi sao (Epicyclic Star-Gear) chịu tải xoắn cực đại (FoS = 56.51 theo API RP 684).",
-        "Gắn sẵn gia tốc kế VE4765 (20/30 mils) và cảm biến tốc độ SE1260.",
-        "Là điểm mốc cố định (Fixed Point) khi thực hiện căn tâm nguội tổ máy (+0.66 mm bù giãn nở nhiệt)."
+        "Epicyclic Compound Star-Gear architecture engineered to FoS = 56.51 per API RP 684 (min req 2.0).",
+        "Monitors gearbox casing vibration VE4765 (20/30 mils) and dual shaft speeds.",
+        "Designated Fixed Point for cold alignment (+0.66 mm vertical thermal growth offset)."
       ],
-      ceLinks: { cause: "Rung hộp số VE4765 ≥ 30 mils p-p hoặc Sự cố ngắn mạch máy phát", effect: "Bảo vệ cắt tuabin & phản lực xoắn truyền xuống bu-lông neo chân đế" },
+      ceLinks: {
+        cause: "Gearbox Vibration VE4765 ≥ 30 mils p-p OR Generator Terminal Short-Circuit Fault.",
+        logic: "Turbotronic™ 6 vibration trip + switchgear relay trips turbine and absorbs transient torque.",
+        effect: "Executes Fast Stop + opens 52G; high-FoS gear housing transfers transient reaction safely to skid hold-down bolts."
+      },
       specs: [
-        ["Loại hộp số", "Solar Epicyclic Compound Star-Gear (P/N 330850-502)"],
-        ["Tỷ số truyền", "15,200 rpm → 1,500 rpm (50 Hz) · Khối lượng 3,044 kg"],
-        ["Khớp nối trục", "Ameridrive 1098075-100 · DBSE = 833.88 ± 0.40 mm"],
-        ["Cảm biến rung hộp số", "VE4765 Accelerometer (Hi 20 / SD 30 mils p-p)"],
-        ["Hệ số an toàn xoắn", "FoS = 56.51 (API RP 684 · yêu cầu ≥ 2.0)"]
+        ["Gearbox Model", "Solar Epicyclic Compound Star-Gear (P/N 330850-502)"],
+        ["Speed Ratio / Mass", "15,200 rpm → 1,500 rpm (50 Hz) · Mass 3,044 kg"],
+        ["High/Low Coupling", "Ameridrive 1098075-100 · DBSE = 833.88 ± 0.40 mm"],
+        ["Vibration Probe", "VE4765 Accelerometer (Hi 20 / SD 30 mils p-p)"],
+        ["Torsional Safety", "FoS = 56.51 (API RP 684 compliant; req ≥ 2.0)"]
       ],
-      warnings: ["CĂN TÂM NGUỘI: Hộp số là mốc CỐ ĐỊNH, máy phát di chuyển. Bù giãn nở nhiệt phương đứng VO = +0.66 mm (+0.026\") tại khớp nối. Tắt gia nhiệt dầu khi căn tâm nguội!"],
+      warnings: ["COLD ALIGNMENT: The Gearbox is the FIXED point — move only the Kato Generator. Apply VO = +0.66 mm (+0.026\") vertical cold offset. Turn OFF lube oil sump heater before cold alignment checks!"],
       liveKeys: ["genRpm", "vibGbx"]
     },
     {
-      id: "generator", shortName: "Máy phát Kato", tag: "G4000 (Kato)", name: "Máy phát Kato 4P63.5-4400 (6.2 MW / 6.6 kV)", pidSheet: "P&ID Sht 9 · D04-00001",
+      id: "generator", shortName: "Kato Generator", tag: "G4000 (Kato)", name: "Kato 4P63.5-4400 Synchronous Generator (6.2 MW / 6.6 kV)", pidSheet: "P&ID Sht 9 · D04-00001",
       pos3d: [4.2, 2.0, 0], relatedCase: "CASE_START",
-      role: "Biến đổi cơ năng 1,500 rpm thành điện năng 3 pha 6,600 V / 50 Hz (6,200 kW / 7,750 kVA), tự động hòa đồng bộ và chia tải lên lưới giàn công nghệ CPPT.",
+      role: "Converts 1,500 rpm mechanical shaft power into 3-phase 6,600 V / 50 Hz electrical power (6,200 kW / 7,750 kVA), managing voltage regulation, auto-synchronizing, and CPPT bus load sharing.",
+      purpose: "Delivers clean, grid-synchronized electrical power across CPPT platform buses in both Isochronous (single-unit/master) and Droop (parallel load-sharing) modes under severe offshore environments.",
+      construction: [
+        "4-pole brushless synchronous machine with shaft-mounted Permanent Magnet Generator (PMG) exciter and IP56 CACA/TEAAC top air-to-air heat exchanger.",
+        "Two 5.5 kW top cooling fans (M4360 / M4361) circulating internal air through the stator core.",
+        "Dual redundant Basler DECS-250 digital excitation controllers (AT0140/0220), 6× stator winding RTDs (TE4210–16), DE/NDE bearing RTDs (TE4230/40), and vibration probes."
+      ],
+      operation: [
+        "At 80% Ngp, CGCM enables Basler DECS-250 excitation to build 6.6 kV terminal voltage.",
+        "Auto-Synchronizer PF0700 matches voltage (±1.0%), frequency (±0.10 Hz), and phase angle (±5°) within 30 s before closing Switchgear Breaker 52G.",
+        "During Normal Stop, load ramps down at 40 kW/s to 5% load before opening 52G."
+      ],
       features: [
-        "Kích từ không chổi than kết hợp PMG và bộ điều khiển kép Basler DECS-250 (bật tại 80% Ngp).",
-        "Hòa đồng bộ tự động trong ±0.10 Hz, ±1.0% V, ±5° pha (timeout 30s) với chế độ Isochronous/Droop.",
-        "Làm mát tuần hoàn khí-khí CACA IP56 nhờ 2 quạt đỉnh M4360/M4361 (5.5 kW mỗi quạt) và RTD giám sát cuộn dây 120/130°C."
+        "Brushless PMG excitation controlled by dual Basler DECS-250 AVRs (activated at 80% Ngp).",
+        "Auto-Sync PF0700 closes 52G within ±0.10 Hz, ±1.0% V, ±5° phase (30 s timeout).",
+        "CACA IP56 cooling with dual fans M4360/4361 and continuous stator/bearing RTD monitoring."
       ],
-      ceLinks: { cause: "Sự cố lưới KA9600/KA9601 (87/51G) hoặc Stator > 130°C / Rung > 4.5 mils", effect: "Mở tức thì máy cắt 52G + Cắt Cooldown (KA9600) hoặc Fast Stop (KA9601)" },
+      ceLinks: {
+        cause: "Switchgear Relay Trip KA9600/KA9601 (87 Differential / 51G Earth Fault) OR Stator > 130°C OR Vib > 4.5 mils.",
+        logic: "Customer 6.6 kV Switchgear energizes KA9600 (Cooldown) or KA9601 (Fast Stop) hardwired intertrip inputs.",
+        effect: "Instantaneously opens generator breaker 52G, trips DECS-250 field excitation, and executes turbine Cooldown or Fast Stop."
+      },
       specs: [
-        ["Thông số điện", "6,200 kW / 7,750 kVA · 6,600 V · 50 Hz · PF 0.8 · 678 A"],
-        ["Làm mát & Vỏ", "CACA / TEAAC IP56 · 2 quạt M4360/4361 (5.5 kW ea)"],
-        ["Kích từ & Hòa đồng bộ", "Dual Basler DECS-250 (AT0140/0220) · Sync ±0.1Hz/±1%/±5°"],
-        ["Nhiệt độ & Rung", "Stator TE4210–16 (120/130°C) · Brg TE4230/40 (85/95°C) · Vib 3.5/4.5 mils"],
-        ["Khối lượng", "31,979 kg (phải tháo cụm Cooler trước khi cẩu máy phát)"]
+        ["Electrical Rating", "6,200 kW / 7,750 kVA · 6,600 V · 50 Hz · 0.8 PF · 678 A"],
+        ["Cooling & Enclosure", "CACA / TEAAC IP56 · 2× Top Fans M4360/4361 (5.5 kW ea)"],
+        ["Excitation & Sync", "Dual Basler DECS-250 (AT0140/0220) · Sync ±0.1Hz / ±1% / ±5°"],
+        ["Thermal & Vibration", "Stator TE4210–16 (120/130°C) · Brg TE4230/40 (85/95°C) · Vib 3.5/4.5 mils"],
+        ["Total Weight", "31,979 kg (remove top CACA cooler module prior to crane lift)"]
       ],
-      warnings: ["LƯU Ý BẢO VỆ: DECS-250 chỉ là bảo vệ thứ cấp, KHÔNG có chức năng 87 (so lệch) và 51G (chạm đất) — phải tích hợp từ Switchgear khách hàng qua KA9600/KA9601."],
+      warnings: ["PROTECTION GAP NOTE: Basler DECS-250 only provides secondary backup protection — it LACKS 87 (Differential) and 51G (Ground Overcurrent). Customer Switchgear MUST supply these trips via KA9600/KA9601."],
       liveKeys: ["loadKw", "voltageKv", "freqHz", "statorTemp"]
     },
     {
-      id: "exhaust", shortName: "Ống xả Cullum", tag: "PJ20786 (Cullum)", name: "Hệ thống Ống xả & Tiêu âm Cullum Detuners", pidSheet: "D08-00002 · DDR-0002/0003",
+      id: "exhaust", shortName: "Cullum Exhaust", tag: "PJ20786 (Cullum)", name: "Cullum Detuners Exhaust Diffuser, Bellows & Silencer Stack", pidSheet: "D08-00002 · DDR-0002/0003",
       pos3d: [2.3, 4.3, 0], relatedCase: "CASE_STOP",
-      role: "Dẫn khí thải 540°C từ đầu ra tuabin qua ống khuếch tán, khớp nối giãn nở nhiệt và ống tiêu âm đứng NR6305 lên cao an toàn, giảm ồn xuống 76 dBA.",
+      role: "Collects 540°C turbine exhaust gas through an acoustic diffuser, absorbs axial/lateral thermal expansion via bellows, and vents vertically through the NR6305 silencer while maintaining low skin temperature and noise.",
+      purpose: "Protects Zone 1/Zone 2 hazardous area auto-ignition limits (≤ 60°C skin temp), keeps backpressure below 6.0 inH₂O to preserve turbine power, and achieves 76 dBA acoustic compliance.",
+      construction: [
+        "Dual-layer insulated 316L/Inconel ducting (200 mm RGS internal wool + 100 mm external basalt rockwool cladding).",
+        "Multi-ply metallic expansion bellows absorbing 38 mm compression / 13 mm extension without loading the turbine exhaust collector flange.",
+        "Vertical silencer stack NR6305 with calibrated axial gap DIM A = 5–12 mm and 8× Stop Choc lateral restraint brackets (1 mm clearance)."
+      ],
+      operation: [
+        "Up to 143,551 ACFM of hot exhaust gas exits the turbine horizontally, turns 90° upward inside the collector diffuser, and passes through acoustic splitter baffles.",
+        "During cold-to-hot ramp (ambient → 540°C), bellows compress across the DIM A = 5–12 mm calibrated clearance without transmitting flange forces > 400 lbf.",
+        "Stop Choc brackets arrest lateral seismic/blast deflection while permitting free vertical thermal growth."
+      ],
       features: [
-        "Bọc cách nhiệt 2 lớp (200 mm RGS trong + 100 mm bông đá basalt) giữ nhiệt bề mặt vùng ATEX ≤ 60°C.",
-        "Khớp nối mềm Bellows bù giãn nở nhiệt dọc trục (nén 38 mm, kéo 13 mm) không truyền tải trọng lên tuabin.",
-        "Thiết kế khe hở giãn nở nhiệt DIM A = 5–12 mm và gối chặn Stop Choc Brackets 1 mm."
+        "Dual-layer insulation keeps exterior surface temperature ≤ 60°C across ATEX zones.",
+        "Expansion bellows isolate thermal pipe forces (max 400 lbf flange reaction).",
+        "Calibrated field thermal clearance DIM A = 5–12 mm with 1 mm Stop Choc bracket gaps."
       ],
-      ceLinks: { cause: "Tổn áp xả vượt ngưỡng hoặc Rò khí nóng vào vùng ATEX", effect: "Tăng áp suất đối Pback làm tăng T5 và giảm công suất đầu ra" },
+      ceLinks: {
+        cause: "Excessive exhaust backpressure (> 6.0 inH₂O) OR Bellows rupture / hot gas leak into enclosure.",
+        logic: "Higher backpressure raises T5 gas temperature and TE6110 enclosure temperature; gas/heat sensors monitor leak.",
+        effect: "High T5 triggers power derating or Overtemp Shutdown; hot gas leak trips TE6110 (≥ 85°C) Fast Stop."
+      },
       specs: [
-        ["Nhiệt độ & Lưu lượng", "540°C @ 36.4°C amb (Max 579°C) · 143,551 ACFM"],
-        ["Tổn thất áp suất ròng", "1,128 Pa (4.5 inH₂O) < Giới hạn 6.0 inH₂O"],
-        ["Độ ồn dự báo", "76.0 dB(A) (1 tổ) / 81.0 dB(A) (3 tổ) < 85 dB(A)"],
-        ["Khe giãn nở nhiệt DIM A", "5 – 12 mm (cập nhật bích nối dài 20786-09-0551 Rev A)"],
-        ["Tải bích giao diện", "Tối đa 400 lbf (1,780 N) · Bellows không chịu tĩnh tải"]
+        ["Temp & Exhaust Flow", "540°C @ 36.4°C amb (Max 579°C) · 143,551 ACFM"],
+        ["Net Pressure Drop", "1,128 Pa (4.5 inH₂O) < 6.0 inH₂O Design Limit"],
+        ["Predicted Noise", "76.0 dB(A) Single Unit / 81.0 dB(A) 3 Units < 85 dB(A)"],
+        ["Thermal Gap DIM A", "5 – 12 mm (updated extension flange 20786-09-0551 Rev A)"],
+        ["Interface Flange Load", "Max 400 lbf (1,780 N) · Bellows carry zero dead weight"]
       ],
-      warnings: ["CẬP NHẬT HIỆN TRƯỜNG (DDR-0002/0003): Kiểm tra khe hở hướng trục DIM A = 5–12 mm và giữ khe hở 1 mm tại 8 gối chặn Stop Choc Brackets. Không siết bích ống xả trước khi căn tâm xong!"],
+      warnings: ["FIELD UPDATE (DDR-0002/0003): Verify axial thermal gap DIM A = 5–12 mm and 1 mm clearance at all 8 Stop Choc Brackets. Do NOT bolt exhaust flange tight until gearbox/generator alignment is finalized!"],
       liveKeys: ["exhaustC"]
     },
     {
-      id: "lube", shortName: "Bể dầu & Bơm", tag: "R3100 / P3110-70", name: "Hệ thống Dầu Bôi trơn (ISO VG 32) & Bể dầu Skid", pidSheet: "P&ID Sht 7–8 · ES 9-224",
+      id: "lube", shortName: "Lube Oil System", tag: "R3100 / P3110-70", name: "Skid Lube Oil Reservoir (ISO VG 32) & 3-Pump Header", pidSheet: "P&ID Sht 7–8 · ES 9-224",
       pos3d: [-1.0, 0.5, 1.3], relatedCase: "CH2",
-      role: "Cung cấp dầu khoáng ISO VG 32 sạch (ISO 4406 ≤ 16/14/12) liên tục để bôi trơn, làm mát ổ đỡ tuabin, hộp số, máy phát và cấp dầu điều khiển ngay cả khi mất điện AC.",
+      role: "Stores, heats, filters, and circulates ultra-clean ISO VG 32 mineral oil continuously to turbine bearings, epicyclic gearbox, Kato generator bearings, and hydraulic actuators even during total AC blackout.",
+      purpose: "Prevents dry metal-to-metal bearing wiping during starts, full-load operation, emergency blackouts, and 4-hour hot soak-back post-shutdown cooldown.",
+      construction: [
+        "Integral 2,805 L (741 gal) base-frame oil tank R3100 with 15 kW immersion heater H3103, level transmitter LT3100, and mist eliminator F3270 + flame arrestor XFA3270.",
+        "3-pump redundancy: Shaft-driven Main Pump P3110 (185 gpm), AC Pre/Post Pump P3150 (47 gpm), and 120 VDC Emergency Backup Pump P3170 (31 gpm).",
+        "Duplex 5 µm filter skid maintaining ISO 4406 ≤ 16/14/12 cleanliness and header sensors PT3200 / TE3200."
+      ],
+      operation: [
+        "Pre-Lube & Start: P3150 establishes ≥ 25 psig header pressure to permit cranking, then stops once P3110 takes over above 65% Ngp.",
+        "AC Loss / Fault: If PT3200 dips below 38 psig, 120 VDC Backup Pump P3170 starts automatically from the GB0525 battery bank.",
+        "Post-Lube (4 Hours): Runs continuously for 60 min after shutdown, then cycles 2.5 min ON / 9.5 min OFF for 3 hours."
+      ],
       features: [
-        "3 bơm phối hợp: P3110 trục chính (185 gpm), P3150 AC Pre/Post (47 gpm) và P3170 DC 120V dự phòng (31 gpm).",
-        "Bể dầu tích hợp 2,805 L đặt trên khung skid 3 điểm chống rung AVM 30 tấn + tách sương F3270 & chặn lửa XFA3270.",
-        "Tự động test bơm DC P3170 mỗi ngày lúc 12:00 và duy trì chu trình Post-Lube 4 giờ sau khi dừng máy."
+        "Triple-pump architecture: P3110 Main (185 gpm), P3150 AC Pre/Post (47 gpm), P3170 120 VDC Backup (31 gpm).",
+        "2,805 L skid tank mounted inside A709 Gr 50 frame with F3270 mist eliminator & XFA3270 flame arrestor.",
+        "Automated daily DC pump P3170 health test at 12:00 PM and 4-hour Post-Lube cycle."
       ],
-      ceLinks: { cause: "Áp suất PT3200 < 31 psig hoặc Mức LT3100 < 17.1\" hoặc Fire Trip", effect: "Cắt máy Fast Stop Lockout & tự động đóng bơm DC 120V P3170 bảo vệ ổ trục" },
+      ceLinks: {
+        cause: "Header PT3200 < 31 psig OR Tank Level LT3100 < 17.1\" OR Fire Trip / AC Blackout.",
+        logic: "GuardLogix hard-trips turbine on low oil pressure/level while immediately latching DC Pump P3170 via battery Bus.",
+        effect: "Fast Stop Lockout protects rotor journals while P3170 (120 VDC) delivers 31 gpm emergency lubrication through full coastdown and 4h Post-Lube."
+      },
       specs: [
-        ["Dầu bôi trơn", "Mineral Oil ISO VG 32 (Solar ES 9-224 Class II · ISO 4406 ≤ 16/14/12)"],
-        ["Bể dầu tích hợp R3100", "2,805 L (741 gal) · LT3100 (Lo 20\" / SD 17.1\") · Heater H3103 (15 kW)"],
-        ["3 Bơm dầu", "P3110 Chính (185 gpm) · P3150 AC Pre/Post (47 gpm) · P3170 DC 120V (31 gpm)"],
-        ["Áp suất ống góp PT3200", "Lo 33 psig / Lo SD 31 psig / Hi 65 psig (Nominal 52 psig)"],
-        ["Nhiệt độ ống góp TE3200", "Lo 43°C / Hi 71°C (160°F) / Hi SD 74°C (165°F)"]
+        ["Oil Specification", "Mineral ISO VG 32 (Solar ES 9-224 Class II · ISO 4406 ≤ 16/14/12)"],
+        ["Integral Reservoir", "R3100: 2,805 L (741 gal) · LT3100 (Lo 20\" / SD 17.1\") · H3103 (15 kW)"],
+        ["3 Lube Pumps", "P3110 Main (185 gpm) · P3150 AC (47 gpm) · P3170 DC 120V (31 gpm)"],
+        ["Header Pressure PT3200", "Nominal 52 psig · Lo Alarm 33 psig · Lo SD 31 psig · Hi 65 psig"],
+        ["Header Temp TE3200", "Lo 43°C · Hi Alarm 71°C (160°F) · Hi SD 74°C (165°F)"]
       ],
-      warnings: ["Bơm dự phòng DC P3170 tự động test mỗi 24h lúc 12:00. Quy trình Post-Lube sau dừng kéo dài 4 giờ (60 phút đầu + chu kỳ 9.5 phút OFF / 2.5 phút ON)."],
+      warnings: ["DC Emergency Pump P3170 runs an automated self-test every 24h at 12:00. Post-Lube after shutdown lasts 4 hours total (60 min continuous + cycling 9.5 min OFF / 2.5 min ON)."],
       liveKeys: ["lubePress", "lubeTemp", "lubeLevel"]
     },
     {
-      id: "cooler", shortName: "Làm mát dầu AXH", tag: "ASY3220 (AXH)", name: "Bộ làm mát Dầu Ngoài Skid AXH 48-3ZF (3×50%)", pidSheet: "P&ID Sht 8 · Air Cooler IOM",
+      id: "cooler", shortName: "AXH Oil Cooler", tag: "ASY3220 (AXH)", name: "Off-Skid AXH 48-3ZF Lube Oil Fin-Fan Cooler (3×50%)", pidSheet: "P&ID Sht 8 · Air Cooler IOM",
       pos3d: [-0.8, 1.8, -5.0], relatedCase: "CH2",
-      role: "Giải nhiệt 295 kW nhiệt lượng từ dầu bôi trơn tuần hoàn bằng 3 quạt hút gió cưỡng bức ngoài skid (cấu hình 3 × 50%: chạy 2 dự phòng 1), giữ nhiệt độ dầu ổn định ~57°C.",
+      role: "Rejects 295 kW of frictional and thermal heat from circulating ISO VG 32 lube oil using 3×50% forced-draft cooling fans, regulating header oil supply temperature steady at ~57.5°C.",
+      purpose: "Prevents oil viscosity breakdown and thermal bearing shutdown (TE3200 ≥ 74°C) during full-load tropical ambient operation (36.4°C), providing N+1 fan redundancy against mechanical failures.",
+      construction: [
+        "Off-skid finned-tube heat exchanger bundle (AXH 48-3ZF, 250 L oil holdup, 2,744 kg wet weight) with 3-way thermostatic mixing valve TCV3200 (51–60°C).",
+        "Three 48-inch Moore axial fans (M3220, M3221, M3222) driven by 2.2 kW WEG motors through Gates Poly Chain 8MGT synchronous belts.",
+        "Dedicated Metrix seismic vibration transmitters (VT3220/21/22) on every fan drive assembly."
+      ],
+      operation: [
+        "Normal Load: 2 fans run in Duty (100% capacity = 2×50%) while Fan #3 (M3222) stands by Ready; TCV3200 modulates oil bypass between 51–60°C.",
+        "1-Fan Vibration Trip: If VT3220 exceeds 7.62 mm/s, Fan #1 trips off, leaving only 50% cooling capacity — oil temperature TE3200 climbs rapidly.",
+        "Standby Recovery: Starting standby Fan #3 restores 100% cooling capacity before TE3200 hits the 74°C Shutdown threshold."
+      ],
       features: [
-        "Van điều nhiệt 3 ngã TCV3200 (51–60°C) tự động trộn dòng dầu nóng qua giàn trao đổi nhiệt.",
-        "3 quạt Moore 48\" truyền động đai răng Gates 8MGT gắn cảm biến rung Metrix VT3220/21/22.",
-        "Khi 1 quạt đang chạy bị Trip rung cao (> 7.62 mm/s), công suất làm mát còn 50% nên cần gọi ngay quạt dự phòng #3."
+        "3-way thermostatic valve TCV3200 (51–60°C) maintains ideal oil inlet viscosity automatically.",
+        "Three 48\" Moore fans with Gates 8MGT belt drives protected by Metrix VT3220/21/22 vibration transmitters.",
+        "3×50% redundancy: losing 1 fan cuts cooling to 50%, requiring standby Fan #3 auto/manual start."
       ],
-      ceLinks: { cause: "Quạt M3220 Trip rung cao (VT3220 > 7.62 mm/s)", effect: "Nhiệt độ dầu TE3200 tăng vượt 71°C (Alarm) → 74°C (Shutdown nếu không bật M3222)" },
+      ceLinks: {
+        cause: "Cooling Fan M3220 High Vibration Trip (VT3220 > 7.62 mm/s) without M3222 Standby Start.",
+        logic: "Vibration interlock trips faulty fan M3220; cooling duty drops to 50%, raising TE3200 toward 71°C (Hi) and 74°C (Hi-Hi SD).",
+        effect: "If standby M3222 starts, TE3200 stabilizes ~58°C; if unmitigated > 74°C, Turbotronic™ 6 trips turbine via Cooldown/Fast Stop."
+      },
       specs: [
-        ["Model & Tải nhiệt", "AXH 48-3ZF (Job 253035) · 295 kW (1,006,645 BTU/hr)"],
-        ["Cấu hình quạt", "3 × 50% Quạt Moore 48\" · Motor WEG 2.2 kW (M3220/21/22)"],
-        ["Truyền động đai", "Dây đai răng Gates Poly Chain 8MGT · Van nhiệt TCV3200 (51–60°C)"],
-        ["Cảm biến rung Metrix", "VT3220/21/22 · Hi Alarm 6.35 mm/s (0.25 in/s) · SD 7.62 mm/s"],
-        ["Khối lượng & Dầu", "Ướt 6,050 lb (2,744 kg) · Dung tích dầu 250 L"]
+        ["Model & Heat Duty", "AXH 48-3ZF (Job 253035) · 295 kW (1,006,645 BTU/hr)"],
+        ["Fan Configuration", "3 × 50% Moore 48\" Fans · WEG 2.2 kW Motors (M3220/21/22)"],
+        ["Drive & Control", "Gates Poly Chain 8MGT Belts · 3-Way Valve TCV3200 (51–60°C)"],
+        ["Metrix Vibration", "VT3220/21/22 · Hi Alarm 6.35 mm/s (0.25 in/s) · SD 7.62 mm/s"],
+        ["Weight & Volume", "Wet Weight 6,050 lb (2,744 kg) · Oil Volume 250 L"]
       ],
-      warnings: ["TUYỆT ĐỐI KHÔNG thử thủy lực Air Cooler bằng nước tại công trường. Khi 1 quạt bị Trip rung cao, phải gọi quạt dự phòng thứ 3 để ngăn nhiệt độ dầu TE3200 vượt 74°C."],
+      warnings: ["STRICT PROHIBITION: NEVER hydrotest the AXH oil cooler with water on site. When one fan trips on vibration, immediately start the 3rd standby fan to avoid a TE3200 ≥ 74°C trip."],
       liveKeys: ["lubeTemp", "coolerFansOn", "vibCooler1"]
     },
     {
-      id: "fuelSkid", shortName: "Nhiên liệu Kép", tag: "FCE2130 / P2220", name: "Cụm Van Khí Gas & Bơm Nhiên liệu Lỏng Diesel", pidSheet: "P&ID Sht 5–6",
+      id: "fuelSkid", shortName: "Dual-Fuel Skid", tag: "FCE2130 / P2220", name: "Dual-Fuel Gas Valve Module & Diesel Forwarding Skid", pidSheet: "P&ID Sht 5–6",
       pos3d: [-1.5, 1.3, 3.6], relatedCase: "CH1",
-      role: "Lọc, đo lưu lượng, điều tiết chính xác lưu lượng nhiên liệu Khí (qua van điện FCE2130) hoặc Diesel (qua bơm biến tần P2220) và bảo vệ ngắt kép fail-closed SIL 2.",
+      role: "Filters, measures, and meters exact mass flow of either Fuel Gas (via 120 VDC actuator FCE2130) or Diesel Fuel (via VFD pump P2220), backed by SIL 2 double-block-and-bleed shutoff valves.",
+      purpose: "Provides rapid governor response (0–100% load swings), sub-100 ms explosion-proof fuel isolation on ESD, and automatic uninterrupted gas-to-liquid switchover when platform gas supply pressure fails.",
+      construction: [
+        "Gas Train (2\"): 10 µm coalescing scrubber F2106, dual fail-closed shutoff valves AV2120/AV2124 with vent valve AV2121, and 120 VDC electric metering valve FCE2130 (no blocking diodes per ES 2474).",
+        "Diesel Train (1\"): Duplex 3 µm filter ASY2201, water separator F2211, 18.5 kW VFD pump P2220/M2220, and dual shutoff valves AV2220/AV2222.",
+        "Pressure transmitters PT2120, low-gas switch PS2106, and gas superheat sensor TE2120."
+      ],
+      operation: [
+        "Gas Mode: AV2120/2124 open, vent AV2121 closes, and Turbotronic™ 6 modulates FCE2130 (0–100%) to hold 50.00 Hz / Load SP.",
+        "Low Gas Auto-Transfer (PS2106): If PT2120 falls below 4.48 barg (65 psig) at > 90% Ngp, SIS/PLC spins up Diesel pump P2220, opens AV2220/22, and swaps seamlessly to Liquid Fuel.",
+        "Emergency Trip: De-energizing ESD chain drops spring-return shutoff valves AV2120/24 and opens bleed vent AV2121 instantly."
+      ],
       features: [
-        "Nhánh Gas: lọc tách lỏng F2106 (10 µm), van ngắt kép AV2120/AV2124 + van xả thông AV2121 + van điều tiết FCE2130 (120 VDC).",
-        "Nhánh Diesel: lọc kép ASY2201 (3 µm), tách nước F2211, bơm VFD P2220 (18.5 kW) và cụm van ngắt AV2220/2222.",
-        "Liên động PS2106 tự động chuyển từ Gas sang Diesel không gián đoạn khi áp suất khí đầu vào tụt < 4.48 barg (ở Ngp > 90%)."
+        "Gas double-block-and-bleed (AV2120/AV2121/AV2124) + regenerative 120 VDC metering valve FCE2130.",
+        "Diesel 3 µm filtration, coalescer F2211, and VFD forwarding pump P2220 (18.5 kW).",
+        "PS2106 pressure switch triggers automatic Gas → Diesel transfer below 4.48 barg (> 90% Ngp)."
       ],
-      ceLinks: { cause: "Áp khí PT2120 < 4.48 barg (PS2106) hoặc Mất ESD Chain", effect: "Tự động chuyển sang Diesel (khi >90% Ngp) hoặc đóng cứng AV2120/24/2220/22" },
+      ceLinks: {
+        cause: "Gas Header Pressure PT2120 < 4.48 barg (PS2106) OR Hi-Gas > 505 psig OR ESD Chain Trip.",
+        logic: "If Ngp > 90% on low gas pressure, PLC initiates Auto Dual-Fuel Transfer; on ESD/Hi-Gas, GuardLogix cuts fuel relays.",
+        effect: "Seamless switch to Diesel keeps 6.6 kV bus online; ESD slams AV2120/24 & AV2220/22 closed and vents manifold via AV2121."
+      },
       specs: [
-        ["Đường khí Gas (2\")", "F2106 (10 µm) → AV2120/2124 (Shutoff) → FCE2130 (120 VDC)"],
-        ["Áp suất khí PT2120", "Lo Alarm 65 psig (4.48 barg) · Min cấp 18.7–22.2 barg · Hi SD 505 psig"],
-        ["Đường dầu Diesel (1\")", "ASY2201 (3 µm) → F2211 → P2220/M2220 (18.5 kW VFD) → AV2220/22"],
-        ["Nhiệt độ khí TE2120", "Quá nhiệt ≥ 28°C trên điểm sương · Max thiết kế 93°C (SD 102°C)"],
-        ["Chuyển tự động PS2106", "SIS Low Gas Press tự động chuyển sang Diesel khi Ngp > 90%"]
+        ["Fuel Gas Train (2\")", "F2106 (10 µm) → AV2120/2124 (Shutoff) → FCE2130 (120 VDC)"],
+        ["Gas Pressure PT2120", "Lo Alarm 65 psig (4.48 barg) · Min Op 18.7–22.2 barg · Hi SD 505 psig"],
+        ["Liquid Diesel (1\")", "ASY2201 (3 µm) → F2211 → P2220/M2220 (18.5 kW VFD) → AV2220/22"],
+        ["Gas Superheat TE2120", "Min ≥ 28°C above dew point · Max Design 93°C (SD 102°C)"],
+        ["Auto-Transfer PS2106", "SIS Low Gas Pressure swaps Gas → Diesel when Ngp > 90%"]
       ],
-      warnings: ["Nguồn 120 VDC cấp cho van điện FCE2130 KHÔNG được lắp diode chặn (cần tụ tối thiểu 12,000 µF do hồi năng lượng hai chiều theo ES 2474)."],
+      warnings: ["ELECTRICAL RULE (ES 2474): NEVER install blocking diodes on the 120 VDC bus feeding FCE2130 actuators — bidirectional regenerative braking requires ≥ 12,000 µF bus capacitance."],
       liveKeys: ["gasPress", "liqPress", "fuelMode"]
     },
     {
-      id: "enclosure", shortName: "Vỏ 316L & Thông gió", tag: "M6211 / M6212", name: "Vỏ Bao che 316L SS, Thông gió & Gối AVM 30 Tấn", pidSheet: "P&ID Sht 11 · MID Sht 17",
+      id: "enclosure", shortName: "316L Encl & Vent", tag: "M6211 / M6212", name: "316L Acoustic Enclosure, ATEX Ventilation & 30t AVMs", pidSheet: "P&ID Sht 11 · MID Sht 17",
       pos3d: [-0.8, 3.3, 1.7], relatedCase: "CH3",
-      role: "Cách âm ≤ 85 dBA và duy trì thông gió áp suất dương liên tục (15,000 SCFM) nhằm ngăn khí cháy bên ngoài xâm nhập và pha loãng hơi rò rỉ trong buồng máy Zone 1.",
+      role: "Attenuates package noise to ≤ 85 dBA at 1 m, isolates hot equipment on 3-point 30-ton anti-vibration mounts (AVMs), and maintains positive 15,000 SCFM ATEX ventilation inside the turbine compartment.",
+      purpose: "Safely dilutes minor internal gas/oil vapors, cools hot casing/piping surfaces, and blocks external platform hazardous gases from entering the Zone 1 interior under normal running conditions.",
+      construction: [
+        "Heavy marine 316L stainless steel insulated panels bolted onto an A709 Gr 50 structural base frame supported by three 30-ton AVMs (Pads A, B1 sliding · Pad B2 fixed; 74.34 MT total weight).",
+        "Two 100% redundant 15 kW (20 HP) ventilation fans: M6211 (Main) and M6212 fed from an independent offshore AC bus.",
+        "Pneumatic fire dampers FD6210/FD6240, differential pressure transmitter PDT6180, and internal ambient RTD TE6110."
+      ],
+      operation: [
+        "Positive Pressurization: Fan M6211 maintains enclosure ΔP > 0.15 inH₂O (nom ~0.42 inH₂O) and TE6110 < 75°C across the turbine compartment.",
+        "Fan Auto-Swap: If M6211 trips (PDT6180 < 0.15\"), independent-bus Fan M6212 starts within seconds before Cooldown/Trip occurs.",
+        "ATEX Gas vs. Fire Rule: On 25% LEL Gas Detection, turbine trips but Vent Fan STAYS ON to purge gas; ONLY confirmed Fire stops vent fans and slams dampers FD6210/FD6240 shut."
+      ],
       features: [
-        "Vật liệu thép không gỉ 316L SS chống ăn mòn biển, đặt trên 3 gối chống rung AVM 30 tấn.",
-        "2 quạt thông gió 100% dự phòng: M6211 (chính) và M6212 (lấy từ nguồn AC độc lập hoàn toàn).",
-        "Cửa chặn lửa khí nén FD6210/FD6240 mở khi vận hành và chỉ đóng sập khi có xác nhận cháy (Fire Trip)."
+        "316L SS corrosion-resistant acoustic enclosure mounted on three 30-ton AVMs (M36 uplift studs).",
+        "2×100% ventilation fans: M6211 (Main) and M6212 powered from a completely independent AC bus.",
+        "Pneumatic fire dampers FD6210/FD6240 remain open during gas trips and close strictly on confirmed Fire Trip."
       ],
-      ceLinks: { cause: "Trip M6211 (PDT6180 < 0.15\") HOẶC Rò khí 25% LEL HOẶC Cháy", effect: "Rò Gas: GIỮ QUẠT CHẠY thổi sạch; Cháy: DỪNG QUẠT + ĐÓNG DAMPER FD6210/40" },
+      ceLinks: {
+        cause: "Vent Fan M6211 Trip (PDT6180 < 0.15\") OR 25% LEL Gas Leak OR Confirmed Fire Trip.",
+        logic: "EQP / GuardLogix distinguishes Gas Leak vs Fire: Low ΔP starts M6212; Gas Leak keeps vent running; Fire cuts fans + closes dampers.",
+        effect: "Gas Trip: FAST STOP while M6211/12 purge Zone 1; Fire Trip: M6211/12 STOP + FD6210/40 SHUT airtight to hold Marioff mist."
+      },
       specs: [
-        ["Vật liệu & Độ ồn", "Thép không gỉ 316L SS · 85 dBA @ 1 m · Zone 1 trong / Zone 2 ngoài"],
-        ["Quạt thông gió", "M6211 (Chính) & M6212 (Dự phòng nguồn AC độc lập!), 15 kW (20 HP) ea"],
-        ["Chênh áp & Nhiệt độ", "PDT6180 (Lo 0.15 inH₂O) · TE6110 (Hi 75°C / SD 85°C)"],
-        ["Gối chống rung AVM", "3 gối 30 tấn (Pad A, B1 trượt · B2 cố định) · Khung 74.34 MT"],
-        ["Cửa chặn lửa", "Dampers FD6210 / FD6240 đóng khí nén khi có Fire Trip"]
+        ["Material & Noise", "316L Stainless Steel · ≤ 85 dBA @ 1 m · Zone 1 In / Zone 2 Out"],
+        ["Ventilation Fans", "M6211 (Main) & M6212 (Independent AC Bus!), 15 kW (20 HP) ea"],
+        ["Enclosure ΔP & Temp", "PDT6180 (Lo 0.15 inH₂O) · TE6110 (Hi 75°C / SD 85°C)"],
+        ["Anti-Vibration Mounts", "3× 30-ton AVMs (Pad A, B1 Slide · B2 Fixed) · Frame 74.34 MT"],
+        ["Fire Dampers", "FD6210 / FD6240 Pneumatic Fail-Closed on Fire Trip"]
       ],
-      warnings: ["CẢNH BÁO AVM: Nới lỏng bu-lông chống nhổ M36 ≥ 5 mm trước khi cẩu nhấc skid. QUY TẮC ATEX: Khi rò khí Gas 25% LEL, cắt tuabin nhưng KHÔNG được tắt quạt thông gió!"],
+      warnings: ["AVM LIFT WARNING: Loosen M36 uplift restraint studs ≥ 5 mm before crane lifting the skid! ATEX RULE: On 25% LEL gas trip, NEVER stop the enclosure ventilation fan!"],
       liveKeys: ["enclDp", "enclTemp", "ventFanActive"]
     },
     {
-      id: "firegas", shortName: "Báo cháy & Marioff", tag: "ASY6600 / EQP", name: "Báo Cháy/Khí Det-Tronics EQP & Phun sương Marioff", pidSheet: "P&ID Sht 10 · PIL 150",
+      id: "firegas", shortName: "F&G & Marioff", tag: "ASY6600 / EQP", name: "Det-Tronics EQP Fire & Gas System + Marioff Hi-Fog ASY6600", pidSheet: "P&ID Sht 10 · PIL 150",
       pos3d: [3.2, 1.5, 3.6], relatedCase: "CH5",
-      role: "Giám sát cháy/nổ độc lập chuẩn SIL 2 (mạng vòng LON dự phòng) và kích hoạt hệ thống phun sương nước áp lực cao 200 barg dập cháy nhanh không gây sốc nhiệt.",
+      role: "Provides SIL 2 independent optical flame, heat, and IR hydrocarbon detection via Det-Tronics EQP (redundant LON ring), and suppresses turbine enclosure fires using 200 barg Marioff HI-FOG® water mist.",
+      purpose: "Achieves ultrafast < 2 s fire suppression without thermal shock damage to hot turbine casings and eliminates asphyxiation hazards of CO₂ flooding while cutting explosion risk at 10%/25% LEL.",
+      construction: [
+        "Det-Tronics Eagle Quantum Premier (EQP AT0170) SIL 2 safety PLC on dual fault-tolerant LON communications loops.",
+        "11× PIRECL IR hydrocarbon detectors (DTG6561–83), 3× Multispectrum IR flame detectors (DTF6510–12), and 2× Fenwal 163°C heat switches (TS6540/41).",
+        "Marioff ASY6600 skid: Nitrogen propellant cylinders + deionized water cylinders (Bank A & B) feeding 3 turbine nozzles N6601–03 (< 30 µm droplet mist at 200 barg)."
+      ],
+      operation: [
+        "10% LEL (1oo3): Pre-alarm informs control room operator; 25% LEL (2oo3): EQP commands turbine Fast Stop while keeping vent fan M6211 running.",
+        "Confirmed Fire (MIR Flame + Heat TS6540 ≥ 163°C): Executes the mandatory 5-Step Fire Trip Sequence automatically.",
+        "Bank A discharges initial 200 barg dense mist knockdown followed by sustained mist cooling from Bank B."
+      ],
       features: [
-        "11 đầu dò khí hồng ngoại PIRECL (10% LEL cảnh báo 1oo3 · 25% LEL cắt máy 2oo3).",
-        "3 đầu dò lửa quang phổ MIR (DTF6510–12) + 2 cảm biến nhiệt Fenwal TS6540/41 (163°C).",
-        "Cụm Marioff Bank A & B (N₂ + nước khử khoáng < 30 µm) xả qua 3 vòi phun N6601–03 trong buồng tuabin."
+        "11× PIRECL IR gas detectors: 10% LEL (1oo3 Alarm) and 25% LEL (2oo3 Fast Stop).",
+        "3× MIR optical flame detectors (DTF6510–12) + 2× Fenwal thermal switches (163°C / 325°F).",
+        "Marioff HI-FOG ASY6600 Bank A & B (N₂ + DI water @ 200 barg) discharges via 3 nozzles N6601–03."
       ],
-      ceLinks: { cause: "Xác nhận Lửa (DTF6510 / TS6540 ≥ 163°C)", effect: "Thực thi Chuỗi 5 bước Fire Trip: Cắt AC → Dừng quạt → Đóng Damper → Xả Marioff → P3170" },
+      ceLinks: {
+        cause: "Confirmed Fire (MIR Flame DTF6510–12 OR Heat TS6540/41 ≥ 163°C) inside Enclosure.",
+        logic: "Det-Tronics EQP (SIL 2) executes hardened 5-Step Fire Trip sequence in milliseconds.",
+        effect: "1. Cut Non-Essential AC → 2. Stop Vent Fan M6211/12 → 3. Slam Dampers FD6210/40 → 4. Discharge Marioff 200b Mist → 5. Fast Stop + DC P3170 Post-Lube."
+      },
       specs: [
-        ["Bộ điều khiển F&G", "Det-Tronics EQP AT0170 (SIL 2, 2 vòng mạng LON dự phòng)"],
-        ["Đầu dò Khí (11× IR)", "PIRECL DTG6561–83 · 10% LEL (1oo3 Alarm) · 25% LEL (2oo3 Fast Stop)"],
-        ["Đầu dò Lửa & Nhiệt", "3× MIR DTF6510–12 + 2× Fenwal TS6540/41 (Shutdown 163°C / 325°F)"],
-        ["Chữa cháy Marioff", "ASY6600 (NFPA 750) · Bank A & B (N₂ + nước 200 barg) · Vòi N6601–03"],
-        ["Chuỗi 5 bước Fire Trip", "1.Cắt AC → 2.Dừng quạt → 3.Đóng Damper → 4.Phun sương → 5.Fast Stop"]
+        ["F&G Safety PLC", "Det-Tronics EQP AT0170 (SIL 2 · Dual LON Ring Topology)"],
+        ["Gas Detectors (11×)", "PIRECL DTG6561–83 · 10% LEL (1oo3 Alarm) · 25% LEL (2oo3 SD)"],
+        ["Flame & Heat", "3× MIR DTF6510–12 + 2× Fenwal TS6540/41 (Trip 163°C / 325°F)"],
+        ["Marioff System", "ASY6600 (NFPA 750) · Bank A & B (200 barg) · Nozzles N6601–03"],
+        ["5-Step Fire Matrix", "1.Cut AC → 2.Stop Vent → 3.Close Dampers → 4.Mist On → 5.Fast Stop"]
       ],
-      warnings: ["Sau khi xả sương chữa cháy: chờ 15 phút mới mở cửa, làm sạch lọc và thổi khô đường ống. Reset tín hiệu cháy tại EQP trước khi xoay khóa từ INHIBIT sang AUTO."],
+      warnings: ["POST-DISCHARGE ENTRY: Wait at least 15 minutes before opening enclosure doors, clean strainers, and blow dry mist piping. Reset EQP panel BEFORE turning release key from INHIBIT to AUTO."],
       liveKeys: ["gasLel", "fireDetected", "waterMistActive"]
     },
     {
-      id: "ngr", shortName: "NGR & Tủ UCP", tag: "CPPT-NER-6001", name: "Điện trở Nối đất Trung tính NGR & Tủ UCP", pidSheet: "D04-00002 · D55-00001",
+      id: "ngr", shortName: "NGR & UCP", tag: "CPPT-NER-6001", name: "190.5 Ω Neutral Grounding Resistor & UCP Turbotronic™ 6", pidSheet: "D04-00002 · D55-00001",
       pos3d: [6.4, 1.2, 2.2], relatedCase: "CH4",
-      role: "Giới hạn dòng chạm đất 1 pha xuống tối đa 20 A trong 10 giây (190.5 Ω) để bảo vệ cuộn stator máy phát 6.6 kV, đồng thời chứa tủ điều khiển PLC an toàn GuardLogix & nguồn 120 VDC.",
+      role: "Limits single-phase generator stator ground-fault current safely to 20 A for 10 s (190.5 Ω NGR), while the UCP houses the SIL 2/3 GuardLogix safety PLC, 120 VDC VRLA battery system, and Modbus TCP links.",
+      purpose: "Protects expensive 6.6 kV generator stator laminations from arc-flash iron burning during earth faults and guarantees fail-safe black-start control and DC Post-Lube autonomy for up to 70 min emergency + 4 hours lube.",
+      construction: [
+        "Kato CPPT-NER-6001 outdoor IP56 316L SS grid resistor rated 190.5 Ω ±10% @ 25°C (3,811 V L-N / 20 A / 10 s) with 20:1 Zero-Sequence CT.",
+        "Turbotronic™ 6 UCP panel containing Rockwell GuardLogix 1756-L83EXTS (SIL 2/3), FLEX 5000 I/O on EtherNet/IP DLR ring, and 4× Modbus TCP links to PCS/PMS.",
+        "120 VDC power train: Battery Charger GD0525, 60-cell VRLA Battery Bank GB0525, and EExd isolator QS0525 (50,000 µF bus capacitor bank)."
+      ],
+      operation: [
+        "Earth Fault: NGR limits phase-to-ground current to 20 A; 20:1 ZCT feeds platform switchgear relay (51G) to trip 52G cleanly.",
+        "UCP Control: GuardLogix scans fuel, VGV, T5, and vibration loops continuously, backed up by hardwired Watchdog timer KT0146 (7.5 s timeout) and backup relay SA0401.",
+        "DC Autonomy: If offshore AC bus fails, VRLA bank GB0525 sustains PLC control, FCE2130/1440 actuators, and DC lube pump P3170 seamlessly."
+      ],
       features: [
-        "Điện trở lưới thép 316L SS 190.5 Ω ±10% @ 25°C (IP56 ngoài trời) kèm biến dòng ZCT 20:1.",
-        "Tủ điều khiển Turbotronic™ 6 dùng PLC GuardLogix SIL 2/3, mạng vòng EtherNet/IP DLR và 4 cổng Modbus TCP (PCS/PMS).",
-        "Hệ ắc quy VRLA GB0525 (60 cell, 120 VDC) cấp liên tục 70 phút sự cố + 4 giờ Post-Lube cho P3170 & van điện."
+        "316L SS NGR grid rated 190.5 Ω ±10% (20 A, 10 s) with 20:1 ZCT for Switchgear 51G protection.",
+        "GuardLogix 1756-L83EXTS (SIL 2/3) + EtherNet/IP DLR + 4× Modbus TCP interfaces.",
+        "120 VDC VRLA bank GB0525 + Charger GD0525 supplies 70-min emergency ride-through + 4h Post-Lube."
       ],
-      ceLinks: { cause: "Chạm đất Stator hoặc Watchdog PLC KT0146 timeout (7.5s)", effect: "Cắt Relay cứng Backup ESD Chain (KA0235–50) → Fast Stop Lockout" },
+      ceLinks: {
+        cause: "Stator Earth Fault (20 A NGR) OR PLC Watchdog KT0146 Timeout (> 7.5 s) OR E-Stop SB0400.",
+        logic: "Watchdog / SB0400 breaks hardwired Backup ESD Chain KA0235–50 independently of PLC software.",
+        effect: "Forces immediate Fast Stop Lockout (requires physical SA0401 reset); switchgear 51G/87 intertrip opens 52G immediately."
+      },
       specs: [
-        ["Điện trở NGR (Kato)", "190.5 Ω ±10% @ 25°C · 3,811 V L-N / 20 A / 10 giây (IP56, 316L SS)"],
-        ["Cảnh báo sai khác hồ sơ", "Bản vẽ D04-00002 & ELS Sht 94 ghi 190.5 Ω (Index trang 94.D2 lỗi mẫu 38 Ω)"],
-        ["Tủ điều khiển UCP", "GuardLogix 1756-L83EXTS (SIL 2/3) + FLEX 5000 DLR + 4× Modbus TCP"],
-        ["Nguồn 120 VDC / Ắc quy", "Charger GD0525 + VRLA GB0525 (60 cells) + EExd Breaker QS0525"]
+        ["NGR Rating (Kato)", "190.5 Ω ±10% @ 25°C · 3,811 V L-N / 20 A / 10 s (IP56, 316L SS)"],
+        ["Doc Discrepancy Note", "D04-00002 & ELS Sht 94 specify 190.5 Ω (ignore typographic 38 Ω on Index p.94.D2)"],
+        ["UCP Safety PLC", "GuardLogix 1756-L83EXTS (SIL 2/3) + FLEX 5000 DLR + 4× Modbus TCP"],
+        ["120 VDC / Battery", "Charger GD0525 + 60-cell VRLA GB0525 + EExd Switch QS0525"]
       ],
-      warnings: ["Không được đấu nối đất dạng chuỗi (daisy-chain) giữa FG, PE, IE (< 5 Ω) và HAIE/IS (≤ 1 Ω). Không đóng cầu dao ắc quy khi bộ nạp đang có điện!"],
+      warnings: ["EARTHING & DC RULES: NEVER daisy-chain ground buses (keep FG, PE, IE < 5 Ω and HAIE/IS ≤ 1 Ω separate). NEVER close battery breaker QS0525 while Charger GD0525 is energized!"],
       liveKeys: ["battVdc", "breaker52G"]
     }
   ],
@@ -1137,51 +1523,51 @@ const MEC006_PID_DATA = {
     {
       id: "CH1",
       code: "CH-1",
-      title: "Tụt áp khí nhiên liệu đầu vào (PS2106 / PT2120 Low)",
+      title: "Fuel Gas Supply Pressure Drop (PS2106 / PT2120 Low)",
       severity: "HIGH",
-      desc: "Áp suất khí Gas cấp vào skid (PT2120) sụt đột ngột từ 21.5 barg xuống dưới 4.48 barg (65 psig), kích hoạt tín hiệu SIS Low Gas Pressure PS2106.",
-      mechanism: "Do tổ máy đang chạy ở Ngp > 90%, Turbotronic™ 6 tự động kích hoạt chuyển đổi sang nhiên liệu lỏng Diesel (Auto Gas-to-Liquid Transfer), khởi động bơm P2220/UF2220 và đóng van khí AV2120/2124.",
-      task: "Kiểm tra tổ máy đã chuyển sang chạy DIESEL ổn định (PT2220 > 6 psig), thực hiện Ack All Alarm trên DCS và duy trì tải ổn định.",
+      desc: "Fuel gas skid inlet pressure (PT2120) drops suddenly from 21.5 barg below 4.48 barg (65 psig), tripping SIS Low Gas Pressure switch PS2106.",
+      mechanism: "Because the unit is running above 90% Ngp, Turbotronic™ 6 automatically triggers bumpless Gas-to-Liquid Fuel Transfer: starting Diesel pump P2220/UF2220, opening AV2220/2222, and closing gas shutoff valves AV2120/2124.",
+      task: "Verify the unit transferred stably to DIESEL mode (PT2220 > 6 psig), click Ack All Alarms on DCS, and hold platform generator load steady.",
       checkSolved: (s) => s.activeFault === 'CH1' && s.fuelMode === 'LIQUID' && s.loadKw > 500 && s.alarms.every(a => a.ack)
     },
     {
       id: "CH2",
       code: "CH-2",
-      title: "Quạt làm mát dầu AXH M3220 bị Trip rung cao (VT3220 > 7.62 mm/s)",
+      title: "AXH Oil Cooler Fan M3220 High Vibration Trip (VT3220 > 7.62 mm/s)",
       severity: "HIGH",
-      desc: "Quạt làm mát dầu số 1 (M3220 trên bộ AXH 48-3ZF) bị đứt/lỏng dây đai Gates 8MGT gây rung động vượt ngưỡng 7.62 mm/s (0.30 in/s) và tự cắt (TRIP). Chỉ còn 1 quạt M3221 chạy (50% công suất làm mát), khiến nhiệt độ dầu TE3200 tăng nhanh về ngưỡng Shutdown 74°C (165°F)!",
-      mechanism: "Bắt chước đúng kịch bản CH-2 trong video mẫu nhưng áp dụng cho cụm 3×50% Air Cooler AXH của MEC006.",
-      task: "Khởi động ngay quạt dự phòng M3222 trong bảng THIẾT BỊ PHỤ TRỢ (hoặc trên P&ID Sht 7–8) để đưa nhiệt độ dầu TE3200 giảm về dưới 65°C, sau đó nhấn Ack All!",
+      desc: "Oil cooler fan #1 (M3220 on AXH 48-3ZF) suffers a Gates 8MGT belt/sheave fault causing seismic vibration above 7.62 mm/s (0.30 in/s) and tripping offline. With only Fan #2 (M3221) running (50% cooling duty), lube oil header temperature TE3200 climbs toward the 74°C (165°F) shutdown limit!",
+      mechanism: "Models the 3 × 50% AXH 48-3ZF Fin-Fan cooler redundancy architecture specified on P&ID Sheet 8 and the Air Cooler IOM.",
+      task: "Immediately start standby fan M3222 in the AUXILIARY EQUIPMENT panel (or on P&ID Sht 7–8) to bring TE3200 back below 65°C, then click Ack All!",
       checkSolved: (s) => s.activeFault === 'CH2' && s.equip.M3222 === 'RUN' && s.lubeTemp < 65 && s.alarms.every(a => a.ack)
     },
     {
       id: "CH3",
       code: "CH-3",
-      title: "Trip quạt thông gió chính vỏ bao che M6211 (PDT6180 Low)",
+      title: "Main Enclosure Vent Fan M6211 Trip (PDT6180 Low)",
       severity: "MEDIUM",
-      desc: "Quạt thông gió chính M6211 (15 kW) bị Trip quá dòng. Chênh áp dương bảo vệ vùng nguy hiểm Zone 1/2 (PDT6180) giảm dưới 0.15 inH₂O và nhiệt độ khoang máy TE6110 tăng nhanh hướng tới 85°C.",
-      mechanism: "Theo ELS Note 8 & ES 1762, quạt dự phòng M6212 lấy nguồn AC độc lập hoàn toàn để đảm bảo thông gió liên tục cho vỏ bao che.",
-      task: "Khởi động quạt thông gió dự phòng M6212 để khôi phục chênh áp PDT6180 ≥ 0.30 inH₂O, sau đó nhấn Ack All.",
+      desc: "Primary enclosure ventilation fan M6211 (15 kW) trips on overcurrent. Positive enclosure pressurization (PDT6180) drops below 0.15 inH₂O and compartment temperature TE6110 climbs toward 85°C.",
+      mechanism: "Per ELS Note 8 & ES 1762, standby fan M6212 is fed from a completely independent AC bus to maintain continuous Zone 1/2 ventilation pressurization.",
+      task: "Start standby ventilation fan M6212 to restore enclosure ΔP PDT6180 ≥ 0.30 inH₂O, then click Ack All Alarms.",
       checkSolved: (s) => s.activeFault === 'CH3' && s.equip.M6212 === 'RUN' && s.enclDp >= 0.30 && s.alarms.every(a => a.ack)
     },
     {
       id: "CH4",
       code: "CH-4",
-      title: "Rò rỉ khí cháy trong vỏ bao che (DTG6561: 10% → 25% LEL)",
+      title: "Enclosure Gas Leak Detected (DTG6561: 10% → 25% LEL)",
       severity: "CRITICAL",
-      desc: "Đầu dò khí hồng ngoại Det-Tronics PIRECL phát hiện rò rỉ khí Gas tăng vượt 10% LEL (Alarm) và chạm 25% LEL (2oo3 Confirmed Gas Shutdown).",
-      mechanism: "QUY TẮC SỐNG CÒN ATEX (ES 1762 Sec 13.1): Hệ thống lập tức cắt tuabin (Fast Stop Lockout), đóng van khí AV2120/2124, mở máy cắt 52G, NHƯNG BẮT BUỘC GIỮ QUẠT THÔNG GIÓ M6211/M6212 CHẠY để pha loãng và thổi sạch đám mây khí cháy!",
-      task: "Quan sát quạt thông gió tiếp tục chạy thổi giảm nồng độ LEL về 0% trên 3D & DCS, sau đó nhấn Ack All và Reset / SA0401 để giải tỏa trạng thái khóa.",
+      desc: "Det-Tronics PIRECL IR hydrocarbon detectors sense an enclosure fuel gas leak climbing past 10% LEL (Alarm) and hitting 25% LEL (2oo3 Confirmed Gas Shutdown).",
+      mechanism: "CRITICAL ATEX RULE (ES 1762 Sec 13.1): The system executes immediate Fast Stop Lockout, slams gas shutoff valves AV2120/2124 closed, and opens breaker 52G — YET MUST KEEP VENT FANS M6211/M6212 RUNNING to dilute and purge the gas cloud!",
+      task: "Observe the vent fan continuing to purge enclosure LEL down to 0% in 3D & DCS, then click Ack All and Reset / SA0401 to clear the lockout.",
       checkSolved: (s) => s.activeFault === 'CH4' && s.gasLel < 1.0 && !s.lockout && s.alarms.every(a => a.ack)
     },
     {
       id: "CH5",
       code: "CH-5",
-      title: "Cháy trong vỏ bao che — Kích hoạt Phun sương Marioff ASY6600",
+      title: "Enclosure Fire Confirmed — Marioff ASY6600 Water Mist Discharge",
       severity: "CRITICAL",
-      desc: "Đầu dò lửa quang phổ MIR (DTF6510) và cảm biến nhiệt Fenwal (TS6540 > 163°C / 325°F) xác nhận có cháy trong khoang tuabin!",
-      mechanism: "Thực thi đầy đủ Chuỗi 5 bước Fire Trip (OEM Ch.7): (1) Cắt điện AC phụ trợ → (2) Dừng quạt thông gió M6211/6212 → (3) Đóng kín cửa chặn lửa FD6210/6240 → (4) Xả phun sương nước áp lực cao Marioff 200 barg (thấy rõ hiệu ứng 3D) → (5) Fast Stop Lockout & chạy bơm dầu dự phòng DC 120V (P3170).",
-      task: "Quan sát đầy đủ chuỗi 5 bước bảo vệ trên 3D và P&ID Sht 10, chờ đám cháy dập tắt, sau đó nhấn Ack All và Reset / SA0401 (EQP Reset).",
+      desc: "Multispectrum IR flame detector (DTF6510) and Fenwal heat switch (TS6540 > 163°C / 325°F) confirm an active fire inside the turbine compartment!",
+      mechanism: "Executes the full 5-Step Fire Trip Matrix (OEM Ch.7): (1) Cut Non-Essential AC → (2) Stop Vent Fans M6211/6212 → (3) Close Fire Dampers FD6210/6240 → (4) Discharge 200 barg Marioff HI-FOG mist (visible in 3D) → (5) Fast Stop Lockout & engage 120 VDC Post-Lube pump P3170.",
+      task: "Observe the 5-step safety sequence in 3D & P&ID Sht 10 until fire is extinguished, then click Ack All and Reset / SA0401 (EQP Reset).",
       checkSolved: (s) => s.activeFault === 'CH5' && !s.fireDetected && !s.lockout && s.alarms.every(a => a.ack)
     }
   ]
@@ -1198,6 +1584,7 @@ const SIM = {
   dcsTab: "turbine",
   selectedComp: "compressor",
   drawerOpen: false,
+  modalOpen: false,
   paused: false,
   activeCase: null,
   timeSec: 0,
@@ -1337,7 +1724,7 @@ function showToast(msg) {
 /* ===== OPERATOR COMMANDS ===== */
 function cmdColdStartDemo() {
   if (SIM.lockout) {
-    showToast("Tổ máy đang ở trạng thái LOCKOUT! Nhấn 'Reset / SA0401' trước khi khởi động.");
+    showToast("Unit is in LOCKOUT! Press 'Reset / SA0401' before starting.");
     return;
   }
   SIM.activeFault = null;
@@ -1367,8 +1754,8 @@ function cmdColdStartDemo() {
   SIM.combTemp = SIM.ambientC + 10;
   SIM.exhaustC = SIM.ambientC + 10;
   SIM.lubePress = 18;
-  logEvent("Bắt đầu quy trình Cold Start 8 bước (Prelube + Kiểm tra P3170 + Vent M6211).");
-  showToast("▶ Đang chạy quy trình Cold Start 8 bước (xem hướng dẫn & Cause-Effect bên trái)!");
+  logEvent("Initiated 8-step Cold Start sequence (Prelube + DC Pump P3170 check + Encl Vent M6211).");
+  showToast("▶ Running 8-step Cold Start sequence (see walkthrough & Cause-Effect panel on left)!");
   if (window.showCaseGuideOnly) showCaseGuideOnly('CASE_START');
 }
 
@@ -1376,12 +1763,12 @@ function cmdNormalStop() {
   if (SIM.state === "STOPPED" || SIM.state === "FAST_STOP_LOCKOUT") return;
   SIM.state = "COOLDOWN";
   SIM.stateTimer = 0;
-  logEvent("Lệnh Normal Stop: Giảm tải 40 kW/s → Mở 52G ở 5% tải → Cooldown → Slow Roll.");
-  showToast("■ Normal Stop: Đang giảm tải mềm (40 kW/s) và làm nguội tổ máy.");
+  logEvent("Normal Stop Command: Soft unload 40 kW/s → Open 52G at 5% load → Cooldown → Slow Roll.");
+  showToast("■ Normal Stop: Unloading softly (40 kW/s) and cooling down turbine.");
   if (window.showCaseGuideOnly) showCaseGuideOnly('CASE_STOP');
 }
 
-function cmdEStop(reason = "Nhấn nút E-STOP (SB0400)") {
+function cmdEStop(reason = "Emergency Stop Pushbutton Pressed (SB0400)") {
   triggerFastStopLockout("SB0400", reason, false);
   if (window.showCaseGuideOnly) showCaseGuideOnly('CH8_ESTOP');
 }
@@ -1411,7 +1798,7 @@ function triggerFastStopLockout(tag, reason, isFire = false) {
     SIM.dampersOpen = false;
     SIM.waterMistActive = true;
     SIM.waterMistTimer = 18;
-    logEvent("FIRE TRIP 5 BƯỚC: Cắt AC → Dừng M6211/6212 → Đóng Damper FD6210/6240 → Phun sương Marioff ASY6600 → Bơm DC Post-Lube P3170!");
+    logEvent("5-STEP FIRE TRIP: Cut AC → Stop M6211/6212 → Close Dampers FD6210/6240 → Marioff Water Mist ASY6600 → DC Post-Lube P3170!");
   }
   raiseAlarm(tag, "TRIP", reason + " [FAST STOP LOCKOUT]");
   showToast("🚨 FAST STOP LOCKOUT: " + reason);
@@ -1422,26 +1809,26 @@ function cmdToggleBreaker() {
     SIM.breaker52G = false;
     SIM.loadKw = 0;
     if (SIM.state === "ON_LOAD") SIM.state = "READY_LOAD";
-    logEvent("Mở máy cắt máy phát 52G (SA0701) — Tổ máy chạy không tải 100% Ngp.");
+    logEvent("Generator Breaker 52G opened (SA0701) — Unit spinning No-Load at 100% Ngp.");
   } else {
     if (SIM.ngp < 95 || SIM.lockout) {
-      showToast("Chưa đủ điều kiện đóng 52G (yêu cầu Ready to Load ≥ 90% Ngp & không Lockout).");
+      showToast("Not permissive to close 52G (requires Ready to Load ≥ 90% Ngp & no Lockout).");
       return;
     }
     SIM.state = "SYNCING";
     SIM.stateTimer = 0;
-    logEvent("Kích hoạt hòa đồng bộ tự động DECS-250 (±0.10 Hz, ±1.0% V, ±5°).");
+    logEvent("Initiated DECS-250 Auto-Synchronizing (±0.10 Hz, ±1.0% V, ±5° phase).");
   }
 }
 
 function cmdFuelTransfer(target) {
   if (SIM.fuelMode === target) return;
   if (SIM.ngp < 90 && SIM.state !== "STOPPED") {
-    showToast("Cấm chuyển nhiên liệu: Theo OEM Manual, chỉ chuyển Gas ↔ Liquid khi Ngp > 90%!");
+    showToast("Transfer Inhibited: Per OEM Manual, Gas ↔ Liquid transfer is permitted only at Ngp > 90%!");
     return;
   }
   if (target === "GAS" && SIM.gasPress < 15.0) {
-    showToast("Không thể chuyển sang Gas: Áp suất khí PT2120 quá thấp (< 18.7 barg)!");
+    showToast("Cannot transfer to Gas: Fuel gas header PT2120 too low (< 18.7 barg)!");
     return;
   }
   SIM.fuelMode = target;
@@ -1450,23 +1837,23 @@ function cmdFuelTransfer(target) {
     SIM.av2220 = true; SIM.av2222 = true;
     SIM.av2120 = false; SIM.av2124 = false;
     SIM.pcdPurgeActive = true; SIM.pcdPurgeTimer = 8;
-    logEvent("Chuyển đổi nhiên liệu GAS → LIQUID DIESEL (P2220/UF2220 RUN, mở AV2220/2222).");
-    showToast("🔄 Đã chuyển sang nhiên liệu DIESEL (P2220 RUN)!");
+    logEvent("Fuel Transfer GAS → LIQUID DIESEL (P2220/UF2220 RUN, AV2220/2222 OPEN).");
+    showToast("🔄 Transferred to DIESEL FUEL (P2220 RUN)!");
   } else {
     SIM.av2120 = true; SIM.av2124 = true;
     SIM.av2220 = false; SIM.av2222 = false;
     SIM.equip.P2220 = "STOP";
     SIM.pcdPurgeActive = true; SIM.pcdPurgeTimer = 10;
-    logEvent("Chuyển đổi nhiên liệu LIQUID → GAS + kích hoạt Pcd-Backward Purge (PIL 210).");
-    showToast("🔄 Đã chuyển sang nhiên liệu GAS + Pcd-Backward Purge!");
+    logEvent("Fuel Transfer LIQUID → GAS + Continuous-Cooled PCD Backward Purge (PIL 210).");
+    showToast("🔄 Transferred to GAS FUEL + PCD Backward Purge!");
   }
 }
 
 function cmdPcdPurge() {
   SIM.pcdPurgeActive = true;
   SIM.pcdPurgeTimer = 10;
-  logEvent("Kích hoạt chu trình thổi sạch ống góp nhiên liệu PCD Purge (AV2645–47 / HE2645).");
-  showToast("💨 Đang thực hiện chu trình thổi sạch PCD Purge (10s).");
+  logEvent("Initiated Fuel Manifold PCD Purge Cycle (AV2645–47 / HE2645).");
+  showToast("💨 Running Fuel Manifold PCD Purge Cycle (10s).");
 }
 
 function setLoadSetpoint(v) {
@@ -1481,36 +1868,36 @@ function adjLoadSP(d) { setLoadSetpoint(SIM.loadSp + d); }
 function toggleGovMode() {
   SIM.govMode = SIM.govMode === "ISOCH" ? "DROOP" : "ISOCH";
   document.getElementById('btnGovMode').textContent = SIM.govMode;
-  logEvent(`Chuyển chế độ điều tốc Governor sang ${SIM.govMode === 'ISOCH' ? 'Isochronous (50.00 Hz cố định)' : 'Droop 3.5%'}.`);
+  logEvent(`Governor mode switched to ${SIM.govMode === 'ISOCH' ? 'Isochronous (50.00 Hz fixed)' : 'Droop 3.5%'}.`);
 }
 
 function toggleAuxEquip(tag) {
   if (SIM.equip[tag] === "TRIP") {
-    showToast(`${tag} đang ở trạng thái TRIP! Khởi động thiết bị dự phòng hoặc nhấn Reset.`);
+    showToast(`${tag} is TRIPPED! Start standby equipment or click Reset.`);
     return;
   }
   const next = SIM.equip[tag] === "RUN" ? "STOP" : "RUN";
   // Safety check: Don't allow turning off vent fan during gas leak
   if ((tag === "M6211" || tag === "M6212") && next === "STOP" && SIM.gasLel >= 10) {
-    showToast("⛔ QUY TẮC ATEX: Cấm tắt quạt thông gió vỏ bao che khi đang có rò rỉ khí Gas!");
+    showToast("⛔ ATEX RULE: Prohibited to stop enclosure ventilation fan while gas leak ≥ 10% LEL!");
     return;
   }
   SIM.equip[tag] = next;
-  logEvent(`Thao tác DCS: ${tag} → ${next}`);
+  logEvent(`DCS Manual Action: ${tag} → ${next}`);
 }
 
 function ackAllAlarms() {
   SIM.alarms.forEach(a => a.ack = true);
-  logEvent("Người vận hành đã xác nhận tất cả cảnh báo (Acknowledge All).");
+  logEvent("Operator acknowledged all active alarms (Ack All).");
 }
 
 function resetSystem() {
   if (SIM.fireDetected) {
-    showToast("Chưa thể Reset: Đám cháy chưa được dập hoàn toàn!");
+    showToast("Cannot Reset: Fire inside compartment is not extinguished yet!");
     return;
   }
   if (SIM.gasLel >= 5) {
-    showToast("Chưa thể Reset: Nồng độ khí trong vỏ bao che vẫn còn ≥ 5% LEL!");
+    showToast("Cannot Reset: Enclosure combustible gas concentration still ≥ 5% LEL!");
     return;
   }
   SIM.lockout = false;
@@ -1521,8 +1908,8 @@ function resetSystem() {
   if (SIM.state === "FAST_STOP_LOCKOUT" && SIM.ngp < 5) SIM.state = "STOPPED";
   if (SIM.equip.M6211 === "STOP" && SIM.equip.M6212 === "STOP") SIM.equip.M6211 = "RUN";
   SIM.alarms.forEach(a => { a.active = false; a.ack = true; });
-  logEvent("Đã Reset mạch bảo vệ & Backup Relay System (SA0401 / EQP Reset).");
-  showToast("✅ Đã Reset hệ thống & Backup Relay SA0401 — Sẵn sàng vận hành.");
+  logEvent("Protection circuits & Backup Relay System reset (SA0401 / EQP Reset).");
+  showToast("✅ Protection System & Backup Relay SA0401 Reset — Ready to operate.");
 }
 
 function triggerFault(id) {
@@ -1542,7 +1929,7 @@ function triggerFault(id) {
   SIM.activeFault = id;
   if (id === "CH1") {
     SIM.gasPress = 3.2;
-    raiseAlarm("PT2120", "L", "Áp suất khí nhiên liệu thấp (< 65 psig / 4.48 barg)");
+    raiseAlarm("PT2120", "L", "Fuel Gas Supply Pressure Low (< 65 psig / 4.48 barg)");
     raiseAlarm("PS2106", "H", "SIS Low Gas Press → Auto Gas-to-Liquid Transfer!");
     cmdFuelTransfer("LIQUID");
     setDcsTab("fuel");
@@ -1551,43 +1938,43 @@ function triggerFault(id) {
     SIM.vibCooler[0] = 8.4;
     SIM.equip.M3220 = "TRIP";
     SIM.equip.M3222 = "STOP";
-    raiseAlarm("VT3220", "TRIP", "Quạt AXH M3220 Trip rung cao (8.4 mm/s > 7.62 mm/s)");
+    raiseAlarm("VT3220", "TRIP", "AXH Cooler Fan M3220 High Vibration Trip (8.4 mm/s > 7.62 mm/s)");
     setDcsTab("lube");
     setCameraPreset("cooler");
   } else if (id === "CH3") {
     SIM.equip.M6211 = "TRIP";
     SIM.equip.M6212 = "STOP";
-    raiseAlarm("M6211", "TRIP", "Quạt thông gió chính vỏ bao che M6211 Trip quá dòng");
+    raiseAlarm("M6211", "TRIP", "Main Enclosure Vent Fan M6211 Overcurrent Trip");
     setDcsTab("genfg");
     setCameraPreset("overview");
   } else if (id === "CH4") {
     SIM.gasLel = 14.0; // Will ramp past 25% LEL within ~3 seconds
-    raiseAlarm("DTG6561", "H", "Rò rỉ khí cháy trong vỏ bao che ≥ 10% LEL (1oo3)");
+    raiseAlarm("DTG6561", "H", "Enclosure Fuel Gas Leak Detected ≥ 10% LEL (1oo3)");
     setDcsTab("genfg");
     setCameraPreset("combustor");
   } else if (id === "CH5") {
     SIM.fireDetected = true;
     SIM.enclTemp = 178;
-    raiseAlarm("DTF6510", "TRIP", "Phát hiện lửa quang phổ MIR trong khoang tuabin!");
-    raiseAlarm("TS6540", "TRIP", "Nhiệt độ khoang vượt 163°C (325°F) — Kích hoạt Marioff!");
-    triggerFastStopLockout("ASY6600", "FIRE TRIP 5 BƯỚC — Phun sương nước Marioff 200 barg", true);
+    raiseAlarm("DTF6510", "TRIP", "MIR Optical Flame Detected Inside Turbine Compartment!");
+    raiseAlarm("TS6540", "TRIP", "Compartment Thermal Switch Exceeded 163°C (325°F) — Marioff Activated!");
+    triggerFastStopLockout("ASY6600", "5-STEP FIRE TRIP — Marioff 200 barg Water Mist Discharging", true);
     setDcsTab("genfg");
     setCameraPreset("turbine");
   } else if (id === "CH6_T5") {
     SIM.t5Avg = 845;
     SIM.t5Spread = 128;
-    raiseAlarm("TE1150", "TRIP", "Chênh lệch nhiệt T5 Spread > 111°C (200°F) — Tắc vòi phun!");
+    raiseAlarm("TE1150", "TRIP", "T5 Circumferential Spread > 111°C (200°F) — Clogged Injector Trip!");
     triggerFastStopLockout("TE1150", "High T5 / Spread > 111°C Fast Stop Lockout", false);
     setDcsTab("turbine");
     setCameraPreset("combustor");
   } else if (id === "CH7_OS") {
     SIM.ngp = 112.0;
-    raiseAlarm("UA1200", "TRIP", "Quá tốc Tuabin ≥ 110% Ngp (GuardLogix + BUOS UA1200 SIL 2/3)!");
+    raiseAlarm("UA1200", "TRIP", "Turbine Overspeed ≥ 110% Ngp (GuardLogix + BUOS UA1200 SIL 2/3)!");
     triggerFastStopLockout("UA1200", "Turbine Overspeed SIL 2/3 Lockout", false);
     setDcsTab("turbine");
     setCameraPreset("turbine");
   } else if (id === "CH8_ESTOP") {
-    triggerFastStopLockout("SB0400", "Nhấn E-STOP cứng (Mạch Backup KA0235–KA0250)", false);
+    triggerFastStopLockout("SB0400", "Hardwired E-STOP Actuated (Backup ESD Chain KA0235–KA0250)", false);
     setDcsTab("cematrix");
     setCameraPreset("overview");
   }
@@ -1615,21 +2002,21 @@ function stepSimulation(rawDt) {
     if (SIM.stateTimer > 6.0) {
       SIM.state = "CRANK_PURGE"; SIM.stateTimer = 0;
       SIM.equip.M1300 = "RUN";
-      logEvent("Prelube 30s đạt chuẩn → Khởi động M1300/UF1300 quay Crank 15% Ngp & thổi sạch (Purge).");
+      logEvent("30s Prelube permissive satisfied → Starting M1300/UF1300 at 15% Ngp Crank & Purge.");
     }
   } else if (SIM.state === "CRANK_PURGE") {
     SIM.ngp += (15.5 - SIM.ngp) * dt * 1.1;
     if (SIM.stateTimer > 6.5) {
       SIM.state = "IGNITION"; SIM.stateTimer = 0;
       SIM.av2120 = true; SIM.av2124 = true;
-      logEvent("Đánh lửa Torch BE1020 + 12 vòi phun chính — Chờ xác nhận Light-off T5 ≥ 204°C (400°F).");
+      logEvent("Torch Igniter BE1020 + 12 Fuel Injectors energized — Waiting Light-off T5 ≥ 204°C (400°F).");
     }
   } else if (SIM.state === "IGNITION") {
     SIM.ngp += dt * 4.5;
     SIM.t5Avg += (380 - SIM.t5Avg) * dt * 0.8;
     if (SIM.t5Avg >= 204 && SIM.stateTimer > 3.5) {
       SIM.state = "ACCEL"; SIM.stateTimer = 0;
-      logEvent("Xác nhận Light-off (T5 ≥ 204°C / 400°F) → Tăng tốc tự hành lên 100% Ngp.");
+      logEvent("Light-off confirmed (T5 ≥ 204°C / 400°F) → Accelerating turbine toward 100% Ngp.");
     }
   } else if (SIM.state === "ACCEL") {
     SIM.ngp = Math.min(100.0, SIM.ngp + dt * 9.5);
@@ -1638,27 +2025,27 @@ function stepSimulation(rawDt) {
     }
     if (SIM.lubePress > 25 && SIM.equip.P3150 === "RUN") {
       SIM.equip.P3150 = "STOP";
-      logEvent("Áp suất bơm chính P3110 > 25 psig → Tự động cắt bơm Pre/Post P3150.");
+      logEvent("Main shaft pump P3110 header > 25 psig → Auto-stopping AC Pre/Post pump P3150.");
     }
     if (SIM.ngp >= 68 && SIM.equip.M1300 === "RUN") {
       SIM.equip.M1300 = "STOP";
-      logEvent("Đạt 68% Ngp → Tách ly hợp động cơ khởi động AC M1300 (Starter Dropout).");
+      logEvent("Reached 68% Ngp → Disengaging AC Starter M1300 overrunning clutch (Starter Dropout).");
     }
     if (SIM.ngp >= 80 && !SIM.cgcmEnabled) {
       SIM.cgcmEnabled = true;
-      logEvent("Đạt 80% Ngp → Kích hoạt bộ kích từ & bảo vệ Basler DECS-250 (CGCM Enabled).");
+      logEvent("Reached 80% Ngp → Enabling Basler DECS-250 AVR & protection (CGCM Enabled).");
     }
     if (SIM.ngp >= 99.5) {
       SIM.ngp = 100.0;
       SIM.state = "READY_LOAD"; SIM.stateTimer = 0;
-      logEvent("Đạt 100% Ngp (15,200 rpm) — Sẵn sàng mang tải (HL0402 Ready to Load).");
+      logEvent("Reached 100% Ngp (15,200 rpm) — Ready to Load (HL0402 Permissive On).");
     }
   } else if (SIM.state === "READY_LOAD") {
     SIM.ngp += (100.0 - SIM.ngp) * dt * 2;
     SIM.loadKw += (0 - SIM.loadKw) * dt * 3;
     if (SIM.stateTimer > 3.5 && !SIM.activeFault) {
       SIM.state = "SYNCING"; SIM.stateTimer = 0;
-      logEvent("Bắt đầu hòa đồng bộ tự động DECS-250 (6.6 kV / 50 Hz)...");
+      logEvent("Initiating DECS-250 Auto-Synchronizing (6.6 kV / 50 Hz)...");
     }
   } else if (SIM.state === "SYNCING") {
     SIM.syncAngle = (SIM.syncAngle + dt * 90) % 360;
@@ -1667,8 +2054,8 @@ function stepSimulation(rawDt) {
       SIM.syncAngle = 0;
       SIM.breaker52G = true;
       SIM.state = "ON_LOAD"; SIM.stateTimer = 0;
-      logEvent("Đóng máy cắt máy phát 52G thành công (Auto-Sync OK) — Mang tải lên " + SIM.loadSp + " kW.");
-      showToast("⚡ Hòa lưới 6.6 kV thành công! Đang nâng tải lên " + SIM.loadSp + " kW.");
+      logEvent("Generator Breaker 52G closed (Auto-Sync OK) — Ramping load to " + SIM.loadSp + " kW.");
+      showToast("⚡ Synchronized to 6.6 kV bus! Ramping generator load to " + SIM.loadSp + " kW.");
     }
   } else if (SIM.state === "ON_LOAD") {
     SIM.ngp += (100.0 - SIM.ngp) * dt * 2.5;
@@ -1679,7 +2066,7 @@ function stepSimulation(rawDt) {
       SIM.loadKw = Math.max(0, SIM.loadKw - dt * 650); // Accelerated soft unload
       if (SIM.loadKw <= 310) {
         SIM.breaker52G = false; SIM.loadKw = 0;
-        logEvent("Giảm tải đến 5% (310 kW) → Mở máy cắt 52G → Chạy làm nguội Cooldown.");
+        logEvent("Unloaded to 5% (310 kW) → Breaker 52G opened → Running Cooldown spin.");
       }
     } else if (SIM.stateTimer > 6.0) {
       SIM.av2120 = false; SIM.av2124 = false; SIM.av2220 = false; SIM.av2222 = false;
@@ -1690,7 +2077,7 @@ function stepSimulation(rawDt) {
         SIM.equip.M1300 = "RUN";
         SIM.equip.P3150 = "RUN";
         SIM.equip.P3110 = "STOP";
-        logEvent("Tốc độ < 25% Ngp → Kích hoạt Slow Roll (~15% Ngp bằng VFD UF1300) & Post-Lube P3150.");
+        logEvent("Speed < 25% Ngp → Engaging VFD Slow Roll (~15% Ngp) & AC Post-Lube P3150.");
       }
     }
   } else if (SIM.state === "SLOW_ROLL") {
@@ -1700,7 +2087,7 @@ function stepSimulation(rawDt) {
       SIM.ngp = Math.max(0, SIM.ngp - dt * 6);
       if (SIM.ngp <= 0.1) {
         SIM.ngp = 0; SIM.state = "STOPPED";
-        logEvent("Hoàn tất Slow Roll → Tổ máy dừng an toàn (Post-Lube tiếp tục chu kỳ 4h).");
+        logEvent("Slow Roll cycle complete → Unit safely stopped (4h Post-Lube continues).");
       }
     }
   } else if (SIM.state === "FAST_STOP_LOCKOUT") {
@@ -1777,9 +2164,9 @@ function stepSimulation(rawDt) {
   SIM.lubeTemp += (eqOilTemp - SIM.lubeTemp) * Math.min(1, dt * 0.05);
   SIM.lubeTankTemp += ((SIM.lubeTemp - 3.5) - SIM.lubeTankTemp) * Math.min(1, dt * 0.1);
 
-  if (SIM.lubeTemp >= 71.0) raiseAlarm("TE3200", "H", `Nhiệt độ dầu bôi trơn cao (${SIM.lubeTemp.toFixed(1)}°C ≥ 71°C / 160°F)`);
+  if (SIM.lubeTemp >= 71.0) raiseAlarm("TE3200", "H", `Lube Oil Header Temp High (${SIM.lubeTemp.toFixed(1)}°C ≥ 71°C / 160°F)`);
   if (SIM.lubeTemp >= 74.0 && SIM.state === "ON_LOAD") {
-    triggerFastStopLockout("TE3200", `Nhiệt độ dầu vượt ngưỡng Shutdown (${SIM.lubeTemp.toFixed(1)}°C ≥ 74°C)`, false);
+    triggerFastStopLockout("TE3200", `Lube Oil Header Overtemp Shutdown (${SIM.lubeTemp.toFixed(1)}°C ≥ 74°C)`, false);
   }
 
   // Cooler fan vibrations
@@ -1797,19 +2184,19 @@ function stepSimulation(rawDt) {
   const targetDp = (SIM.dampersOpen && activeVentFans > 0) ? (0.42 * Math.min(1.25, activeVentFans)) : 0.02;
   SIM.enclDp += (targetDp - SIM.enclDp) * Math.min(1, dt * 1.4);
   if (SIM.enclDp < 0.15 && SIM.state === "ON_LOAD") {
-    raiseAlarm("PDT6180", "L", `Chênh áp vỏ bao che thấp (${SIM.enclDp.toFixed(2)} < 0.15 inH₂O)`);
+    raiseAlarm("PDT6180", "L", `Enclosure Pressurization ΔP Low (${SIM.enclDp.toFixed(2)} < 0.15 inH₂O)`);
   }
   const targetEnclT = SIM.fireDetected ? 185 : (SIM.ambientC + (firing ? (activeVentFans > 0 ? 15.5 : 46) : 5));
   SIM.enclTemp += (targetEnclT - SIM.enclTemp) * Math.min(1, dt * 0.08);
-  if (SIM.enclTemp >= 75 && !SIM.fireDetected) raiseAlarm("TE6110", "H", `Nhiệt độ vỏ bao che cao (${SIM.enclTemp.toFixed(1)}°C ≥ 75°C)`);
+  if (SIM.enclTemp >= 75 && !SIM.fireDetected) raiseAlarm("TE6110", "H", `Enclosure Internal Temp High (${SIM.enclTemp.toFixed(1)}°C ≥ 75°C)`);
 
   // CH-4 Gas Leak escalation & ATEX Ventilation purge
   if (SIM.activeFault === "CH4") {
     if (SIM.state === "ON_LOAD" || SIM.state === "READY_LOAD") {
       SIM.gasLel = Math.min(35, SIM.gasLel + dt * 1.6);
       if (SIM.gasLel >= 25.0) {
-        raiseAlarm("DTG6561", "TRIP", "Khí cháy xác nhận ≥ 25% LEL (2oo3) → Fast Stop! (GIỮ QUẠT THÔNG GIÓ CHẠY)");
-        triggerFastStopLockout("DTG6561", "Confirmed Gas 25% LEL — Quạt thông gió giữ nguyên theo ATEX", false);
+        raiseAlarm("DTG6561", "TRIP", "Confirmed Combustible Gas ≥ 25% LEL (2oo3) → Fast Stop! (KEEP VENT FAN RUNNING)");
+        triggerFastStopLockout("DTG6561", "Confirmed Gas 25% LEL — Vent Fan Kept Running per ATEX Rule", false);
       }
     } else if (activeVentFans > 0) {
       // Fuel valves closed + vent fan running -> gas safely purged out!
@@ -1822,8 +2209,8 @@ function stepSimulation(rawDt) {
     SIM.waterMistTimer -= dt;
     if (SIM.waterMistTimer < 11 && SIM.fireDetected) {
       SIM.fireDetected = false;
-      logEvent("Hệ thống phun sương áp lực cao Marioff ASY6600 đã dập tắt đám cháy!");
-      showToast("💧 Phun sương Marioff ASY6600 đã dập tắt đám cháy! Chờ kết thúc chu kỳ xả để Reset.");
+      logEvent("Marioff ASY6600 high-pressure water mist system extinguished enclosure fire!");
+      showToast("💧 Marioff ASY6600 water mist extinguished fire! Wait for discharge end to Reset.");
     }
     if (SIM.waterMistTimer <= 0) {
       SIM.waterMistActive = false;
@@ -1835,8 +2222,8 @@ function stepSimulation(rawDt) {
     const ch = MEC006_PID_DATA.faultChallenges.find(f => f.id === SIM.activeFault);
     if (ch && ch.checkSolved(SIM)) {
       SIM.solvedFaults[SIM.activeFault] = true;
-      logEvent(`✅ HOÀN THÀNH THỬ THÁCH ${ch.code}: ${ch.title}`);
-      showToast(`🎉 CHÚC MỪNG! Bạn đã xử lý thành công kịch bản ${ch.code}!`);
+      logEvent(`✅ COMPLETED CHALLENGE ${ch.code}: ${ch.title}`);
+      showToast(`🎉 CONGRATULATIONS! You successfully resolved challenge ${ch.code}!`);
       renderFaultLab();
     }
   }
@@ -2486,7 +2873,7 @@ function initThreeScene() {
   MEC006_PID_DATA.components.forEach(c => {
     const div = document.createElement('div');
     div.className = 'tag-3d';
-    div.title = `Click để xem cấu tạo & tính năng của ${c.name}`;
+    div.title = `Click to open details: Function, Construction, Operation & C&E for ${c.name}`;
     div.innerHTML = `<div class="t-top"><span class="t-name">${c.shortName}</span><span class="t-tag">${c.tag}</span></div><span class="t-sub" id="lblsub-${c.id}"></span>`;
     div.onclick = (e) => { e.stopPropagation(); selectComponent(c.id, true); };
     div.onmouseenter = () => { VIEW3D.hoverComp = c.id; };
@@ -2627,7 +3014,7 @@ function togglePauseSim() {
     b.textContent = SIM.paused ? '▶' : '⏸';
     b.classList.toggle('active-toggle', SIM.paused);
   }
-  showToast(SIM.paused ? '⏸ Đã tạm dừng mô phỏng để quan sát chi tiết' : '▶ Tiếp tục mô phỏng thời gian thực');
+  showToast(SIM.paused ? '⏸ Simulation paused for detailed inspection' : '▶ Real-time simulation resumed');
 }
 
 function toggleAutoOrbit() {
@@ -3024,7 +3411,7 @@ function renderActivePidSvg() {
       <text x="16" y="24" class="svg-lbl" fill="#22c55e">P&amp;ID UNIT 2000 · DUAL-FUEL GAS / LIQUID DIESEL &amp; PCD PURGE (Sht 5–6)</text>
 
       <!-- GAS FUEL TRAIN (TOP) -->
-      <text x="20" y="54" class="svg-lbl" fill="#4ade80">A. HỆ THỐNG NHIÊN LIỆU KHÍ (2" Cl 300 RF · ES 9-98)</text>
+      <text x="20" y="54" class="svg-lbl" fill="#4ade80">A. FUEL GAS SYSTEM (2" Cl 300 RF · ES 9-98)</text>
       <path d="M 20 96 L 610 96 L 610 175" class="svg-pipe" stroke="#14532d"/>
       <path d="M 20 96 L 610 96 L 610 175" class="svg-flow ${gasFlow?'':'paused'}" stroke="#22c55e"/>
 
@@ -3053,7 +3440,7 @@ function renderActivePidSvg() {
       <text x="415" y="116" class="svg-sub">FT2108 · TE2120 48°C</text>
 
       <!-- LIQUID DIESEL TRAIN (MIDDLE) -->
-      <text x="20" y="212" class="svg-lbl" fill="#fbbf24">B. HỆ THỐNG NHIÊN LIỆU LỎNG DIESEL (1" Cl 150 RF · P2220 / UF2220)</text>
+      <text x="20" y="212" class="svg-lbl" fill="#fbbf24">B. LIQUID DIESEL FUEL SYSTEM (1" Cl 150 RF · P2220 / UF2220)</text>
       <path d="M 20 256 L 610 256 L 610 215" class="svg-pipe" stroke="#78350f"/>
       <path d="M 20 256 L 610 256 L 610 215" class="svg-flow ${liqFlow?'':'paused'}" stroke="#f59e0b"/>
 
@@ -3089,7 +3476,7 @@ function renderActivePidSvg() {
       <rect x="26" y="310" width="340" height="72" class="svg-box" stroke="${SIM.pcdPurgeActive?'#38bdf8':'#253854'}" onclick="cmdPcdPurge()"/>
       <text x="38" y="329" class="svg-lbl">C. CONTINUOUS-COOLED PCD PURGE (HE2645 / AV2645–47)</text>
       <text x="38" y="347" class="svg-val">TE2645: ${SIM.te2645.toFixed(0)}°C (Hi 191°C / Inhibit 204°C) · Status: ${SIM.pcdPurgeActive?'PURGING ('+SIM.pcdPurgeTimer.toFixed(0)+'s)':'STANDBY'}</text>
-      <text x="38" y="366" class="svg-sub">PIL 210: Thổi ngược đẩy tối đa 1 thể tích manifold Diesel về bể thải khách hàng (≥189 L).</text>
+      <text x="38" y="366" class="svg-sub">PIL 210: Backward purge displaces max 1× Diesel manifold volume to customer drain tank (≥189 L).</text>
     </svg>`;
   } else if (SIM.dcsTab === 'lube') {
     const oilFlow = SIM.lubePress > 8;
@@ -3102,7 +3489,7 @@ function renderActivePidSvg() {
       <!-- Reservoir R3100 -->
       <rect x="24" y="252" width="168" height="126" class="svg-box" stroke="#eab308" onclick="selectComponent('lube')"/>
       <rect x="28" y="${374 - Math.min(90, SIM.lubeLevel*3.2)}" width="160" height="${Math.min(90, SIM.lubeLevel*3.2)}" fill="rgba(234,179,8,0.28)"/>
-      <text x="34" y="272" class="svg-lbl">BỂ DẦU R3100 (2,805 L)</text>
+      <text x="34" y="272" class="svg-lbl">LUBE TANK R3100 (2,805 L)</text>
       <text x="34" y="290" class="svg-val">LT3100: ${SIM.lubeLevel.toFixed(1)} in</text>
       <text x="34" y="306" class="svg-sub">Lo 20" · Lo SD 17.1"</text>
       <text x="34" y="324" class="svg-val">TE3100: ${SIM.lubeTankTemp.toFixed(1)}°C</text>
@@ -3130,7 +3517,7 @@ function renderActivePidSvg() {
       <!-- Off-Skid AXH Air Cooler ASY3220 (3 x 50% Fans) -->
       <rect x="460" y="48" width="276" height="145" class="svg-box" stroke="${SIM.lubeTemp>=71?'#ef4444':'#38bdf8'}" onclick="selectComponent('cooler')"/>
       <text x="472" y="68" class="svg-lbl">AXH AIR COOLER ASY3220 (48-3ZF · 295 kW)</text>
-      <text x="472" y="84" class="svg-sub">3×50% Quạt Moore 48" · Motor WEG 2.2kW · Click quạt để Bật/Tắt:</text>
+      <text x="472" y="84" class="svg-sub">3×50% Moore 48" Fans · WEG 2.2kW Motors · Click Fan to Start/Stop:</text>
       ${['M3220','M3221','M3222'].map((m, idx) => {
         const bx = 472 + idx * 88;
         const st = SIM.equip[m];
@@ -3157,7 +3544,7 @@ function renderActivePidSvg() {
 
       <!-- Bearing Lube Header -->
       <rect x="460" y="318" width="276" height="72" class="svg-box" stroke="${SIM.lubeTemp>=71 || SIM.lubePress<33?'#ef4444':'#22c55e'}"/>
-      <text x="472" y="336" class="svg-lbl">LUBE HEADER → Ổ TRỤC TUABIN, HỘP SỐ &amp; KATO</text>
+      <text x="472" y="336" class="svg-lbl">LUBE HEADER → TURBINE, GBX &amp; KATO BEARINGS</text>
       <text x="472" y="355" class="svg-val" fill="${SIM.lubePress<33?'#f87171':'#4ade80'}">PT3200: ${SIM.lubePress.toFixed(1)} psig (Lo 33 / SD 31)</text>
       <text x="472" y="373" class="svg-val" fill="${SIM.lubeTemp>=71?'#f87171':'#38bdf8'}">TE3200: ${SIM.lubeTemp.toFixed(1)}°C (Hi 71°C / SD 74°C)</text>
 
@@ -3166,7 +3553,7 @@ function renderActivePidSvg() {
       <text x="34" y="68" class="svg-lbl">120 VDC VRLA (GB0525)</text>
       <text x="34" y="86" class="svg-val" fill="#c4b5fd">${SIM.battVdc.toFixed(1)} VDC</text>
       <text x="34" y="103" class="svg-sub">Min Run ≥104V · Never &lt;96V</text>
-      <text x="34" y="116" class="svg-sub">Cấp P3170 &amp; Van FCE2130</text>
+      <text x="34" y="116" class="svg-sub">Feeds P3170 &amp; FCE2130</text>
     </svg>`;
   } else {
     // Tab 4: Generator 6.6 kV & Fire/Gas EQP & Enclosure Vent
@@ -3199,17 +3586,17 @@ function renderActivePidSvg() {
       <text x="532" y="74" class="svg-lbl">CPPT 6.6 kV BUS &amp; NGR</text>
       <text x="532" y="92" class="svg-val">NGR ${unit.ngr}: 190.5 Ω</text>
       <text x="532" y="108" class="svg-sub">3,811V / 20A / 10s (Sht 94)</text>
-      <text x="532" y="124" class="svg-sub">Primary 87/51G tại Switchgear</text>
+      <text x="532" y="124" class="svg-sub">Primary 87/51G at Switchgear</text>
 
       <!-- BOTTOM LEFT: ENCLOSURE VENTILATION M6211 / M6212 -->
       <rect x="20" y="192" width="348" height="196" class="svg-box" stroke="${SIM.enclDp<0.15?'#f59e0b':'#38bdf8'}" onclick="selectComponent('enclosure')"/>
-      <text x="32" y="212" class="svg-lbl">THÔNG GIÓ VỎ BAO CHE 316L SS (ATEX ZONE 1/2)</text>
+      <text x="32" y="212" class="svg-lbl">316L SS ENCLOSURE VENTILATION (ATEX ZONE 1/2)</text>
       <text x="32" y="230" class="svg-val" fill="${SIM.enclDp<0.15?'#fbbf24':'#38bdf8'}">PDT6180 ΔP: ${SIM.enclDp.toFixed(2)} inH₂O (Lo 0.15) · TE6110: ${SIM.enclTemp.toFixed(1)}°C</text>
       <text x="32" y="247" class="svg-sub">Dampers FD6210 / FD6240: ${SIM.dampersOpen?'OPEN (Normal)':'CLOSED (Fire Isolation!)'}</text>
 
       ${[
-        { tag:'M6211', x:34, desc:'Chính (15 kW)' },
-        { tag:'M6212', x:200, desc:'Dự phòng (Nguồn ĐL)' }
+        { tag:'M6211', x:34, desc:'Primary (15 kW)' },
+        { tag:'M6212', x:200, desc:'Standby (Indep. AC)' }
       ].map(f => `
         <rect x="${f.x}" y="262" width="152" height="72" rx="5" fill="#0d1729" stroke="${statusColor(SIM.equip[f.tag])}" stroke-width="2" style="cursor:pointer" onclick="event.stopPropagation();toggleAuxEquip('${f.tag}')"/>
         <circle cx="${f.x+136}" cy="278" r="6" fill="${statusColor(SIM.equip[f.tag])}"/>
@@ -3217,8 +3604,8 @@ function renderActivePidSvg() {
         <text x="${f.x+10}" y="299" class="svg-sub">${f.desc}</text>
         <text x="${f.x+10}" y="320" class="svg-val" fill="${statusColor(SIM.equip[f.tag])}">${SIM.equip[f.tag]}</text>
       `).join('')}
-      <text x="32" y="356" class="svg-sub" fill="#fde68a">QUY TẮC ATEX: Khi phát hiện Gas 25% LEL → Cắt tuabin</text>
-      <text x="32" y="372" class="svg-sub" fill="#fde68a">nhưng GIỮ QUẠT THÔNG GIÓ CHẠY để thổi sạch khí!</text>
+      <text x="32" y="356" class="svg-sub" fill="#fde68a">ATEX RULE: On 25% LEL Gas Detection → Trip Turbine</text>
+      <text x="32" y="372" class="svg-sub" fill="#fde68a">but KEEP VENT FANS RUNNING to purge enclosure gas!</text>
 
       <!-- BOTTOM RIGHT: DET-TRONICS EQP & MARIOFF WATER MIST -->
       <rect x="386" y="192" width="352" height="196" class="svg-box" stroke="${SIM.fireDetected||SIM.gasLel>=10||SIM.waterMistActive?'#ef4444':'#22c55e'}" onclick="selectComponent('firegas')"/>
@@ -3232,7 +3619,7 @@ function renderActivePidSvg() {
       <text x="410" y="324" class="svg-sub">Nozzles N6601–03 · Damper SV6670 · Post-Lube P3170</text>
 
       <text x="398" y="356" class="svg-sub">Backup Shutdown Chain (KA0235–50): ${SIM.backupRelayTripped?'OPEN (LOCKOUT)':'HEALTHY'}</text>
-      <text x="398" y="372" class="svg-sub">Đèn chớp đỏ HL6710: ${(SIM.fireDetected||SIM.gasLel>=10||SIM.lockout)?'FLASHING RED':'OFF'}</text>
+      <text x="398" y="372" class="svg-sub">Red Beacon HL6710: ${(SIM.fireDetected||SIM.gasLel>=10||SIM.lockout)?'FLASHING RED':'OFF'}</text>
     </svg>`;
   }
 }
@@ -3241,39 +3628,39 @@ function renderActivePidSvg() {
 function renderFaultLab() {
   const wrap = document.getElementById('faultLabWrap');
   const opCases = [
-    { id: 'CASE_START', code: 'OP-1', title: 'Khởi động Nguội 8 bước (0% → 100% Ngp → Hòa lưới 6.6 kV)', desc: 'Quan sát trình tự Prelube P3150/P3170 → Crank 15% M1300 → Đánh lửa T5 ≥ 204°C → Tách M1300 ở 68% → Bật DECS-250 ở 80% → Hòa 52G.', btn: '▶ Chạy Case OP-1', cls: 'btn-green' },
-    { id: 'CASE_DUALFUEL', code: 'OP-2', title: 'Chuyển đổi Nhiên liệu Kép (Gas ↔ Diesel & PCD Purge)', desc: 'Kiểm chứng khóa liên động Ngp > 90%, chuyển van AV2120/24 ↔ bơm P2220 + AV2220/22 và thổi sạch ống góp HE2645.', btn: '🔄 Chạy Case OP-2', cls: 'btn-cyan' },
-    { id: 'CASE_STOP', code: 'OP-3', title: 'Dừng máy Bình thường & Quay chậm (Cooldown → Slow Roll 15%)', desc: 'Giảm tải mềm 40 kW/s, mở máy cắt 52G ở 5%, làm nguội và quay trục chậm bằng VFD UF1300 chống cong trục nhiệt.', btn: '■ Chạy Case OP-3', cls: 'btn-amber' }
+    { id: 'CASE_START', code: 'OP-1', title: '8-Step Cold Start Sequence (0% → 100% Ngp → 6.6 kV Sync)', desc: 'Watch Prelube P3150/P3170 → 15% Crank Purge M1300 → Ignition T5 ≥ 204°C → Starter Dropout 68% → DECS-250 80% → Auto-Sync 52G.', btn: '▶ Run OP-1 Case', cls: 'btn-green' },
+    { id: 'CASE_DUALFUEL', code: 'OP-2', title: 'Online Dual-Fuel Transfer (Gas ↔ Diesel & PCD Purge)', desc: 'Verify Ngp > 90% interlock, transfer shutoff valves AV2120/24 ↔ Diesel pump P2220 + AV2220/22, and manifold purge HE2645.', btn: '🔄 Run OP-2 Case', cls: 'btn-cyan' },
+    { id: 'CASE_STOP', code: 'OP-3', title: 'Normal Stop & Slow Roll (Cooldown → 15% VFD Turning)', desc: 'Ramp load down gently at 40 kW/s, open 52G at 5% load, cooldown spin, and engage VFD Slow Roll against thermal rotor bow.', btn: '■ Run OP-3 Case', cls: 'btn-amber' }
   ];
   wrap.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;flex-wrap:wrap;gap:4px;">
-      <strong style="font-size:12px;color:#38bdf8;">📖 3 CASE VẬN HÀNH CHU TRÌNH &amp; 5 KỊCH BẢN SỰ CỐ (CLICK ĐỂ XEM HƯỚNG DẪN + C&amp;E 3D)</strong>
-      <button class="btn btn-sm btn-cyan" onclick="resetSystem();SIM.activeFault=null;SIM.activeCase=null;if(window.updateCaseGuideLive)updateCaseGuideLive();renderFaultLab();">Khôi phục Bình thường</button>
+      <strong style="font-size:12px;color:#38bdf8;">📖 3 OPERATING CASES &amp; 5 FAULT CHALLENGES (CLICK FOR 3D WALKTHROUGH + C&amp;E)</strong>
+      <button class="btn btn-sm btn-cyan" onclick="resetSystem();SIM.activeFault=null;SIM.activeCase=null;if(window.updateCaseGuideLive)updateCaseGuideLive();renderFaultLab();">Restore Normal Run</button>
     </div>
     ${opCases.map(oc => {
       const isAct = SIM.activeCase === oc.id;
       return `
       <div class="fault-card" style="${isAct?'border-color:#38bdf8;background:rgba(14,165,233,0.14);':''}">
         <div class="fault-card-top">
-          <span class="fault-title">${oc.code}: ${oc.title} ${isAct?'<span style="color:#38bdf8;">[● ĐANG HƯỚNG DẪN]</span>':''}</span>
+          <span class="fault-title">${oc.code}: ${oc.title} ${isAct?'<span style="color:#38bdf8;">[● GUIDING]</span>':''}</span>
           <button class="btn btn-sm ${oc.cls}" onclick="activateGuidedCase('${oc.id}')">${oc.btn}</button>
         </div>
         <div class="fault-desc">${oc.desc}</div>
       </div>`;
     }).join('')}
-    <div style="border-top:1px solid var(--border);margin:2px 0;padding-top:4px;font-size:11px;font-weight:700;color:#fca5a5;">⚡ 5 KỊCH BẢN THỬ THÁCH SỰ CỐ (CAUSE &amp; EFFECT TRAINING)</div>
+    <div style="border-top:1px solid var(--border);margin:2px 0;padding-top:4px;font-size:11px;font-weight:700;color:#fca5a5;">⚡ 5 FAULT &amp; SAFETY CHALLENGE SCENARIOS (CAUSE &amp; EFFECT TRAINING)</div>
     ${MEC006_PID_DATA.faultChallenges.map(ch => {
       const isAct = SIM.activeFault === ch.id;
       const isSol = !!SIM.solvedFaults[ch.id];
       return `
       <div class="fault-card ${isSol?'solved-fault':(isAct?'active-fault':'')}">
         <div class="fault-card-top">
-          <span class="fault-title">${ch.code}: ${ch.title} ${isSol?'<span style="color:#4ade80;">[✓ ĐÃ XỬ LÝ]</span>':(isAct?'<span style="color:#f87171;">[● ĐANG DIỄN RA]</span>':'')}</span>
-          <button class="btn btn-sm ${isAct?'btn-amber':'btn-red'}" onclick="activateGuidedCase('${ch.id}')">▶ Kích hoạt ${ch.code}</button>
+          <span class="fault-title">${ch.code}: ${ch.title} ${isSol?'<span style="color:#4ade80;">[✓ RESOLVED]</span>':(isAct?'<span style="color:#f87171;">[● ACTIVE]</span>':'')}</span>
+          <button class="btn btn-sm ${isAct?'btn-amber':'btn-red'}" onclick="activateGuidedCase('${ch.id}')">▶ Trigger ${ch.code}</button>
         </div>
         <div class="fault-desc">${ch.desc}</div>
-        <div class="fault-desc" style="color:#cbd5e1;"><b>Cơ chế dự án MEC006:</b> ${ch.mechanism}</div>
-        <div class="fault-guide"><b>Nhiệm vụ học viên:</b> ${ch.task}</div>
+        <div class="fault-desc" style="color:#cbd5e1;"><b>MEC006 Project Logic:</b> ${ch.mechanism}</div>
+        <div class="fault-guide"><b>Operator Action:</b> ${ch.task}</div>
       </div>`;
     }).join('')}
   `;
@@ -3282,19 +3669,31 @@ function renderFaultLab() {
 function getCompLiveHtml(id) {
   const c = SIM;
   if (id === 'compressor') return `PCD: <b>${c.pcd.toFixed(1)} barg</b> · VGV: <b>${c.vgvDeg.toFixed(0)}°</b> · Bleed: <b>${c.bleedPos.toFixed(0)}%</b>`;
-  if (id === 'combustor') return `Nhiên liệu: <b>${c.fuelMode}</b> · Nhiệt buồng đốt: <b>${Math.round(c.combTemp)}°C</b> · Van: <b>${c.fuelValveOp.toFixed(1)}%</b>`;
-  if (id === 'turbine') return `Tốc độ NGP: <b>${c.ngp.toFixed(1)}%</b> · T5 Avg: <b>${Math.round(c.t5Avg)}°C</b> · Spread: <b>Δ${c.t5Spread.toFixed(1)}°C</b>`;
-  if (id === 'generator') return `Tải: <b>${Math.round(c.loadKw)} kW</b> · <b>${c.voltageKv.toFixed(2)} kV</b> · <b>${c.freqHz.toFixed(2)} Hz</b> · 52G: <b>${c.breaker52G?'CLOSED':'OPEN'}</b>`;
-  if (id === 'cooler') return `Quạt: <b>${['M3220','M3221','M3222'].filter(k=>c.equip[k]==='RUN').length}/3</b> · Dầu TE3200: <b>${c.lubeTemp.toFixed(1)}°C</b> · Rung #1: <b>${c.vibCooler[0].toFixed(1)} mm/s</b>`;
-  if (id === 'lube') return `Áp dầu PT3200: <b>${c.lubePress.toFixed(1)} psig</b> · Mức LT3100: <b>${c.lubeLevel.toFixed(1)}"</b> · Bơm DC P3170: <b>${c.equip.P3170}</b>`;
-  if (id === 'enclosure') return `Quạt M6211/12: <b>${c.equip.M6211}/${c.equip.M6212}</b> · ΔP: <b>${c.enclDp.toFixed(2)}"</b> · Damper: <b>${c.dampersOpen?'OPEN':'CLOSED'}</b>`;
-  if (id === 'firegas') return `Gas LEL: <b>${c.gasLel.toFixed(1)}%</b> · Lửa: <b>${c.fireDetected?'CHÁY!':'Bình thường'}</b> · Marioff: <b>${c.waterMistActive?'ĐANG XẢ':'AUTO'}</b>`;
+  if (id === 'combustor') return `Fuel: <b>${c.fuelMode}</b> · Comb Temp: <b>${Math.round(c.combTemp)}°C</b> · Valve OP: <b>${c.fuelValveOp.toFixed(1)}%</b>`;
+  if (id === 'turbine') return `NGP Speed: <b>${c.ngp.toFixed(1)}%</b> · T5 Avg: <b>${Math.round(c.t5Avg)}°C</b> · Spread: <b>Δ${c.t5Spread.toFixed(1)}°C</b>`;
+  if (id === 'generator') return `Load: <b>${Math.round(c.loadKw)} kW</b> · <b>${c.voltageKv.toFixed(2)} kV</b> · <b>${c.freqHz.toFixed(2)} Hz</b> · 52G: <b>${c.breaker52G?'CLOSED':'OPEN'}</b>`;
+  if (id === 'cooler') return `Fans On: <b>${['M3220','M3221','M3222'].filter(k=>c.equip[k]==='RUN').length}/3</b> · Oil TE3200: <b>${c.lubeTemp.toFixed(1)}°C</b> · Fan #1 Vib: <b>${c.vibCooler[0].toFixed(1)} mm/s</b>`;
+  if (id === 'lube') return `Header PT3200: <b>${c.lubePress.toFixed(1)} psig</b> · Tank LT3100: <b>${c.lubeLevel.toFixed(1)}"</b> · DC Pump P3170: <b>${c.equip.P3170}</b>`;
+  if (id === 'enclosure') return `Fans M6211/12: <b>${c.equip.M6211}/${c.equip.M6212}</b> · ΔP: <b>${c.enclDp.toFixed(2)} inH₂O</b> · Dampers: <b>${c.dampersOpen?'OPEN':'CLOSED'}</b>`;
+  if (id === 'firegas') return `Gas LEL: <b>${c.gasLel.toFixed(1)}%</b> · Flame: <b>${c.fireDetected?'FIRE!':'NORMAL'}</b> · Marioff: <b>${c.waterMistActive?'DISCHARGING':'AUTO'}</b>`;
   if (id === 'fuelSkid') return `Gas PT2120: <b>${c.gasPress.toFixed(1)} barg</b> · Diesel P2220: <b>${c.equip.P2220}</b> (${c.liqPress.toFixed(1)} barg)`;
-  if (id === 'exhaust') return `Nhiệt xả T7: <b>${Math.round(c.exhaustC)}°C</b> · Tổn áp: <b>4.5 inH₂O</b> · Khe DIM A: <b>5–12 mm</b>`;
-  if (id === 'inlet') return `Nhiệt nạp TE1110: <b>${c.ambientC}°C</b> · Chênh áp PDT6310: <b>${c.pdt6310.toFixed(1)} inH₂O</b>`;
-  if (id === 'gearbox') return `Tốc độ ra: <b>${c.genRpm} rpm</b> · Rung VE4765: <b>${c.vibGbx.toFixed(1)} mils</b>`;
+  if (id === 'exhaust') return `Exh Temp T7: <b>${Math.round(c.exhaustC)}°C</b> · Net ΔP: <b>4.5 inH₂O</b> · DIM A Gap: <b>5–12 mm</b>`;
+  if (id === 'inlet') return `Inlet TE1110: <b>${c.ambientC}°C</b> · Filter PDT6310: <b>${c.pdt6310.toFixed(1)} inH₂O</b>`;
+  if (id === 'gearbox') return `Output RPM: <b>${c.genRpm} rpm</b> · Vib VE4765: <b>${c.vibGbx.toFixed(1)} mils</b>`;
   if (id === 'starter') return `M1300/UF1300: <b>${c.equip.M1300}</b> · NGP: <b>${c.ngp.toFixed(1)}%</b>`;
-  return `NGR: <b>190.5 Ω</b> · Ắc quy GB0525: <b>${c.battVdc.toFixed(1)} VDC</b>`;
+  return `NGR: <b>190.5 Ω</b> · Battery GB0525: <b>${c.battVdc.toFixed(1)} VDC</b>`;
+}
+
+function getCompLiveChipsHtml(id) {
+  return getCompLiveHtml(id).split(' · ').map(seg => {
+    const idx = seg.indexOf(':');
+    if (idx > 0) {
+      const k = seg.slice(0, idx).trim();
+      const v = seg.slice(idx + 1).trim();
+      return `<div class="live-chip"><span class="lc-k">${k}</span><span class="lc-v">${v}</span></div>`;
+    }
+    return `<div class="live-chip"><span class="lc-v">${seg}</span></div>`;
+  }).join('');
 }
 
 function buildCompDetailInner(comp) {
@@ -3305,18 +3704,19 @@ function buildCompDetailInner(comp) {
       ● LIVE: ${liveStr}
     </div>
     <div>
-      <div class="ed-sec-title">1. Vai trò &amp; Nguyên lý Hoạt động</div>
-      <div class="ed-role">${comp.role || comp.name}</div>
+      <div class="ed-sec-title">1. Function &amp; Purpose</div>
+      <div class="ed-role">${comp.role || comp.name}${comp.purpose ? ' ' + comp.purpose : ''}</div>
     </div>
-    ${featHtml ? `<div><div class="ed-sec-title">2. Tính năng &amp; Cơ chế Điều khiển</div><ul class="ed-list">${featHtml}</ul></div>` : ''}
+    ${featHtml ? `<div><div class="ed-sec-title">2. Construction &amp; Control Features</div><ul class="ed-list">${featHtml}</ul></div>` : ''}
     ${comp.ceLinks ? `
     <div class="ed-ce">
-      <div class="ed-sec-title" style="color:#c4b5fd;">3. Quan hệ Nhân – Quả (Cause → Effect)</div>
+      <div class="ed-sec-title" style="color:#c4b5fd;">3. Cause &amp; Effect Interlocks</div>
       <div><b style="color:#fca5a5;">CAUSE:</b> ${comp.ceLinks.cause}</div>
+      ${comp.ceLinks.logic ? `<div style="margin-top:2px;"><b style="color:#7dd3fc;">LOGIC:</b> ${comp.ceLinks.logic}</div>` : ''}
       <div style="margin-top:2px;"><b style="color:#fde68a;">EFFECT:</b> ${comp.ceLinks.effect}</div>
     </div>` : ''}
     <div>
-      <div class="ed-sec-title">4. Thông số Kỹ thuật (MEC006)</div>
+      <div class="ed-sec-title">4. Technical Specifications (MEC006)</div>
       <table class="spec-table">
         ${comp.specs.map(([k,v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('')}
       </table>
@@ -3325,7 +3725,134 @@ function buildCompDetailInner(comp) {
   `;
 }
 
-/* ---- RENDER COMPONENT INSPECTOR (MODE 1) & FLOATING 3D DRAWER (MODE 2) ---- */
+function renderEquipModal(id) {
+  const comps = MEC006_PID_DATA.components;
+  const idx = Math.max(0, comps.findIndex(c => c.id === id));
+  const comp = comps[idx];
+  const el = document.getElementById('equipModalContent');
+  if (!comp || !el) return;
+
+  const constrHtml = (comp.construction || comp.features || []).map(x => `<li>${x}</li>`).join('');
+  const operHtml = (comp.operation || comp.features || []).map(x => `<li>${x}</li>`).join('');
+  const featHtml = (comp.features || []).map(x => `<li>${x}</li>`).join('');
+  const specsHtml = (comp.specs || []).map(([k, v]) => `
+    <div class="em-spec-item"><div class="em-spec-k">${k}</div><div class="em-spec-v">${v}</div></div>
+  `).join('');
+
+  el.innerHTML = `
+    <div class="equip-modal-head">
+      <div class="equip-modal-title-wrap">
+        <div class="equip-modal-badges">
+          <span class="equip-modal-tag">${comp.tag}</span>
+          <span class="equip-modal-pid">${comp.pidSheet}</span>
+          <span class="equip-modal-idx">${idx + 1} / ${comps.length} · MEC006 Digital Twin</span>
+        </div>
+        <h2 class="equip-modal-title" id="equipModalTitle">${comp.name}</h2>
+      </div>
+      <div class="equip-modal-actions">
+        <button class="modal-btn" onclick="navEquipModal(-1)" title="Previous equipment (Left Arrow)">◀ Prev</button>
+        <button class="modal-btn" onclick="navEquipModal(1)" title="Next equipment (Right Arrow)">Next ▶</button>
+        <button class="modal-btn primary" onclick="focusComp3D('${comp.id}');closeEquipModal()">🎯 Focus 3D</button>
+        ${comp.relatedCase ? `<button class="modal-btn amber" onclick="closeEquipModal();activateGuidedCase('${comp.relatedCase}')">⚡ Simulate Case</button>` : ''}
+        <button class="modal-btn close" onclick="closeEquipModal()" title="Close window (Esc)">✕ Close</button>
+      </div>
+    </div>
+
+    <div class="equip-modal-livebar">
+      <span class="live-badge">● Live Telemetry</span>
+      <div class="equip-modal-livechips" id="modal-live">${getCompLiveChipsHtml(comp.id)}</div>
+    </div>
+
+    <div class="equip-modal-body">
+      <div class="em-card func">
+        <div class="em-card-h">🎯 1. Function (What It Does)</div>
+        <p class="em-card-p">${comp.role}</p>
+      </div>
+
+      <div class="em-card purpose">
+        <div class="em-card-h">🌟 2. Purpose &amp; Operational Benefits (Why It Matters)</div>
+        <p class="em-card-p">${comp.purpose || comp.role}</p>
+      </div>
+
+      <div class="em-card constr">
+        <div class="em-card-h">🔧 3. Construction &amp; Key Assemblies</div>
+        <ul class="em-list">${constrHtml}</ul>
+      </div>
+
+      <div class="em-card oper">
+        <div class="em-card-h">⚙️ 4. Operating Principle &amp; Sequence</div>
+        <ul class="em-list">${operHtml}</ul>
+      </div>
+
+      ${comp.ceLinks ? `
+      <div class="em-card full ce">
+        <div class="em-card-h">🔗 5. Cause &amp; Effect Protection Logic (Interlocks &amp; Trips)</div>
+        <div class="em-ce-flow">
+          <div class="em-ce-box cause">
+            <div class="em-ce-lbl">Trigger / Cause</div>
+            <div class="em-ce-txt">${comp.ceLinks.cause}</div>
+          </div>
+          <div class="em-ce-arrow">➔</div>
+          <div class="em-ce-box logic">
+            <div class="em-ce-lbl">PLC / SIS Logic</div>
+            <div class="em-ce-txt">${comp.ceLinks.logic || 'Turbotronic™ 6 GuardLogix / Det-Tronics EQP voting'}</div>
+          </div>
+          <div class="em-ce-arrow">➔</div>
+          <div class="em-ce-box effect">
+            <div class="em-ce-lbl">System Effect / Action</div>
+            <div class="em-ce-txt">${comp.ceLinks.effect}</div>
+          </div>
+        </div>
+      </div>` : ''}
+
+      <div class="em-card full specs">
+        <div class="em-card-h">📋 6. Technical Specifications, Design Features &amp; Field Warnings</div>
+        <div class="em-specs-grid">${specsHtml}</div>
+        ${featHtml ? `<ul class="em-list" style="margin-top:6px;">${featHtml}</ul>` : ''}
+        ${comp.warnings && comp.warnings[0] ? `<div class="em-warn-box">⚠️ <b>Engineering Note:</b> ${comp.warnings[0]}</div>` : ''}
+      </div>
+    </div>
+
+    <div class="equip-modal-foot">
+      <span>Project: Vietnam Block B EPCI #1 · Solar Taurus™ 70 + Kato 4P63.5-4400</span>
+      <span>Shortcuts: <b>Esc</b> Close · <b>← / →</b> Browse Equipment</span>
+    </div>
+  `;
+}
+
+function openEquipModal(id) {
+  SIM.selectedComp = id;
+  SIM.modalOpen = true;
+  renderEquipModal(id);
+  const bd = document.getElementById('equipModalBackdrop');
+  if (bd) bd.classList.remove('hidden');
+}
+
+function closeEquipModal() {
+  SIM.modalOpen = false;
+  const bd = document.getElementById('equipModalBackdrop');
+  if (bd) bd.classList.add('hidden');
+}
+
+function navEquipModal(dir) {
+  const comps = MEC006_PID_DATA.components;
+  const idx = comps.findIndex(c => c.id === SIM.selectedComp);
+  const nextIdx = ((idx < 0 ? 0 : idx) + dir + comps.length) % comps.length;
+  const nextId = comps[nextIdx].id;
+  SIM.selectedComp = nextId;
+  renderInspector();
+  openEquipModal(nextId);
+  if (SIM.layoutMode === '3d') focusComp3D(nextId);
+}
+
+window.addEventListener('keydown', (e) => {
+  if (!SIM.modalOpen) return;
+  if (e.key === 'Escape') closeEquipModal();
+  else if (e.key === 'ArrowLeft') navEquipModal(-1);
+  else if (e.key === 'ArrowRight') navEquipModal(1);
+});
+
+/* ---- RENDER COMPONENT INSPECTOR (MODE 1) & FLOATING 3D DRAWER ---- */
 function renderInspector() {
   const chips = document.getElementById('compChips');
   if (chips) {
@@ -3352,13 +3879,13 @@ function renderInspector() {
             <h4>${comp.name}</h4>
             <span>${comp.shortName} · ${comp.tag} · ${comp.pidSheet}</span>
           </div>
-          <button class="btn btn-sm" onclick="closeEquipDrawer()" title="Đóng bảng chi tiết">✕</button>
+          <button class="btn btn-sm" onclick="closeEquipDrawer()" title="Close details drawer">✕</button>
         </div>
         <div class="ed-body">${buildCompDetailInner(comp)}</div>
         <div class="ed-actions">
           <button class="btn btn-sm btn-cyan" onclick="focusComp3D('${comp.id}')">🎯 Zoom 3D</button>
-          ${comp.relatedCase ? `<button class="btn btn-sm btn-amber" onclick="activateGuidedCase('${comp.relatedCase}')">⚡ Xem Case liên quan</button>` : ''}
-          <button class="btn btn-sm" onclick="toggleCutaway()">✂ Cắt lớp</button>
+          ${comp.relatedCase ? `<button class="btn btn-sm btn-amber" onclick="activateGuidedCase('${comp.relatedCase}')">⚡ Related Case</button>` : ''}
+          <button class="btn btn-sm" onclick="toggleCutaway()">✂ Cutaway</button>
         </div>
       `;
     }
@@ -3381,17 +3908,15 @@ function focusComp3D(id) {
   setCameraPreset(camMap[id] || 'overview');
 }
 
-function selectComponent(id, openDrawer = true) {
+function selectComponent(id, openModal = true) {
   SIM.selectedComp = id;
-  if (openDrawer && SIM.layoutMode === 'split') {
-    SIM.drawerOpen = true;
-    // Collapse case guide in narrow Split Mode so 3D remains visible
-    const cg = document.getElementById('caseGuideCard');
-    if (cg && !cg.classList.contains('hidden')) cg.classList.add('collapsed');
-  }
+  SIM.drawerOpen = false;
   renderInspector();
   const comp = MEC006_PID_DATA.components.find(c => c.id === id);
-  if (comp) showToast(`🔍 ${comp.shortName} (${comp.tag}) — Xem chi tiết tính năng`);
+  if (openModal) {
+    openEquipModal(id);
+  }
+  if (comp) showToast(`🔍 ${comp.shortName} (${comp.tag}) — Opened Equipment Details Window`);
   if (SIM.layoutMode === '3d') focusComp3D(id);
 }
 
@@ -3561,12 +4086,14 @@ function updateUI(dt) {
   drawCharts();
   const liveBox = document.getElementById('ed-live');
   if (liveBox) liveBox.innerHTML = `● LIVE: ${getCompLiveHtml(SIM.selectedComp)}`;
+  const modalLive = document.getElementById('modal-live');
+  if (modalLive && SIM.modalOpen) modalLive.innerHTML = getCompLiveChipsHtml(SIM.selectedComp);
   if (window.updateCaseGuideLive) updateCaseGuideLive();
 
   const activeAl = SIM.alarms.filter(a => a.active || !a.ack);
   document.getElementById('alarmCount').textContent = activeAl.length;
   document.getElementById('alarmList').innerHTML = activeAl.length === 0
-    ? '<div style="color:#4ade80;padding:4px;">✓ Không có cảnh báo hoạt động (System Normal)</div>'
+    ? '<div style="color:#4ade80;padding:4px;">✓ No Active Alarms (System Normal)</div>'
     : activeAl.map(a => `
       <div class="alarm-row ${a.level==='TRIP'?'al-trip':'al-hi'} ${a.ack?'al-ack':''}">
         <span>${a.t}</span><b>${a.tag}</b><b>${a.level}</b><span>${a.text}</span>
@@ -3594,13 +4121,13 @@ function setDcsTab(tab) {
 function selectUnit(id) {
   SIM.unitId = id;
   const u = MEC006_PID_DATA.units[id];
-  logEvent(`Chuyển giám sát sang tổ máy ${u.pkg} (S/N ${u.sn}, Exhaust ${u.exhaustKg} kg).`);
-  showToast(`Đang hiển thị tổ máy ${u.pkg} (S/N ${u.sn})`);
+  logEvent(`Switched monitoring to unit ${u.pkg} (S/N ${u.sn}, Exhaust ${u.exhaustKg} kg).`);
+  showToast(`Monitoring unit ${u.pkg} (S/N ${u.sn})`);
 }
 function setAmbient(val) {
   SIM.ambientC = val;
   const c = MEC006_PID_DATA.ambientCurves[String(val)];
-  logEvent(`Thay đổi nhiệt độ môi trường thiết kế: ${val}°C (Khả dụng trục ${c.shaftKw} kW, Gas min ${c.minGasBarg} barg).`);
+  logEvent(`Design ambient temperature changed to ${val}°C (Shaft available ${c.shaftKw} kW, Gas min ${c.minGasBarg} barg).`);
 }
 function setSimSpeed(m, btn) {
   SIM.speedMult = m;
@@ -3610,7 +4137,7 @@ function setSimSpeed(m, btn) {
 
 /* ===== BOOTSTRAP ===== */
 window.addEventListener('resize', resizeThree);
-logEvent("Khởi chạy MEC006 Solar Taurus™ 70 Digital Twin — Trạng thái ON-LOAD 4,650 kW (Gas Fuel).");
+logEvent("Launched MEC006 Solar Taurus™ 70 Digital Twin — ON-LOAD 4,650 kW (Gas Fuel).");
 renderInspector();
 renderFaultLab();
 updateUI(1);
@@ -3637,7 +4164,7 @@ requestAnimationFrame(animLoop);
    ============================================================================ */
 const GUIDED_CASES = {
   CASE_START: {
-    title: "▶ CASE OP-1: Khởi động Nguội 8 bước (0 → 100% Ngp → Hòa lưới)",
+    title: "▶ CASE OP-1: 8-Step Cold Start Sequence (0 → 100% Ngp → 6.6 kV Sync)",
     camera: "overview", dcsTab: "turbine",
     causeComp: "starter", effectComps: ["lube", "compressor", "combustor", "generator"],
     ceLinks3D: [
@@ -3647,20 +4174,20 @@ const GUIDED_CASES = {
       { from: "turbine", to: "generator", color: 0x22c55e }
     ],
     flow: [
-      { type: "cause", tag: "PRELUBE", text: "Bơm P3150 (AC) & P3170 (DC) kiểm tra áp dầu & quạt M6211 thổi sạch vỏ.", active: s => s.state === "PRELUBE", done: s => ["CRANK_PURGE","IGNITION","ACCEL","READY_LOAD","SYNCING","ON_LOAD"].includes(s.state) },
-      { type: "logic", tag: "CRANK 15%", text: "Động cơ M1300/UF1300 kéo trục 15% Ngp để Purge buồng đốt & ống xả.", active: s => s.state === "CRANK_PURGE", done: s => ["IGNITION","ACCEL","READY_LOAD","SYNCING","ON_LOAD"].includes(s.state) },
-      { type: "effect", tag: "LIGHT-OFF", text: "Đánh lửa Torch BE1020 + 12 vòi phun; xác nhận cháy khi T5 ≥ 204°C.", active: s => s.state === "IGNITION", done: s => ["ACCEL","READY_LOAD","SYNCING","ON_LOAD"].includes(s.state) },
-      { type: "action", tag: "68%→SYNC", text: "Cắt P3150 (>25 psig), tách M1300 (68%), bật DECS-250 (80%), hòa 52G (100%).", active: s => ["ACCEL","READY_LOAD","SYNCING"].includes(s.state), done: s => s.state === "ON_LOAD" }
+      { type: "cause", tag: "PRELUBE", text: "Pumps P3150 (AC) & P3170 (DC) verify header oil pressure while vent fan M6211 purges enclosure.", active: s => s.state === "PRELUBE", done: s => ["CRANK_PURGE","IGNITION","ACCEL","READY_LOAD","SYNCING","ON_LOAD"].includes(s.state) },
+      { type: "logic", tag: "CRANK 15%", text: "Starter motor M1300/UF1300 cranks rotor at 15% Ngp to purge combustor & exhaust stack.", active: s => s.state === "CRANK_PURGE", done: s => ["IGNITION","ACCEL","READY_LOAD","SYNCING","ON_LOAD"].includes(s.state) },
+      { type: "effect", tag: "LIGHT-OFF", text: "Torch igniter BE1020 + 12 injectors fire; light-off confirmed when T5 ≥ 204°C.", active: s => s.state === "IGNITION", done: s => ["ACCEL","READY_LOAD","SYNCING","ON_LOAD"].includes(s.state) },
+      { type: "action", tag: "68%→SYNC", text: "Cut P3150 (>25 psig), drop M1300 clutch (68%), enable DECS-250 (80%), auto-sync 52G (100%).", active: s => ["ACCEL","READY_LOAD","SYNCING"].includes(s.state), done: s => s.state === "ON_LOAD" }
     ],
     steps: [
-      "Quan sát trên 3D: Cánh hướng dòng VGV đóng -47° và van Bleed FCE1420 mở xả khí chống Surge cho đến 85% Ngp.",
-      "Theo dõi thanh 8 bước phía dưới P&ID sáng lần lượt từ Ready → Prelube → Crank → Ignition → Sync.",
-      "Nhấn tốc độ 2x hoặc 5x trên thanh đầu trang nếu muốn xem nhanh quá trình tăng tốc."
+      "Observe in 3D: compressor VGV stays at -47° and Bleed Valve FCE1420 vents surge air up to 85% Ngp.",
+      "Follow the 8-step sequence bar beneath the P&ID lighting up from Ready → Prelube → Crank → Ignition → Sync.",
+      "Click 2x or 5x speed buttons in the top header to accelerate the start transient."
     ],
-    quickBtns: `<button class="btn btn-sm btn-green" onclick="cmdColdStartDemo()">▶ Chạy lại Start</button><button class="btn btn-sm btn-cyan" onclick="setCameraPreset('turbine')">🔍 Xem VGV & Rotor</button>`
+    quickBtns: `<button class="btn btn-sm btn-green" onclick="cmdColdStartDemo()">▶ Replay Start</button><button class="btn btn-sm btn-cyan" onclick="setCameraPreset('turbine')">🔍 View VGV &amp; Rotor</button>`
   },
   CASE_DUALFUEL: {
-    title: "🔄 CASE OP-2: Chuyển đổi Nhiên liệu Kép (Gas ↔ Diesel & PCD Purge)",
+    title: "🔄 CASE OP-2: Online Dual-Fuel Transfer (Gas ↔ Diesel & PCD Purge)",
     camera: "fuel", dcsTab: "fuel",
     causeComp: "fuelSkid", effectComps: ["combustor", "turbine"],
     ceLinks3D: [
@@ -3668,19 +4195,19 @@ const GUIDED_CASES = {
       { from: "compressor", to: "combustor", color: 0x38bdf8 }
     ],
     flow: [
-      { type: "logic", tag: "PERMISSIVE", text: "Điều kiện bắt buộc: Tốc độ tuabin Ngp > 90% mới cho phép chuyển nhiên liệu.", active: s => s.ngp >= 90, done: s => s.ngp >= 90 },
-      { type: "cause", tag: "TRANSFER", text: "Đóng mở chéo van Gas AV2120/24 ↔ Bơm Diesel P2220 + AV2220/22.", active: s => s.fuelMode === "LIQUID", done: s => s.fuelMode === "LIQUID" },
-      { type: "effect", tag: "3D FLAME", text: "Ngọn lửa buồng đốt 3D & luồng hạt chuyển màu Xanh (Gas) ↔ Hổ phách (Diesel).", active: s => true, done: s => s.pcdPurgeActive },
-      { type: "action", tag: "PCD PURGE", text: "Thổi sạch ống góp bằng khí nén làm mát HE2645 (TE2645 < 191°C).", active: s => s.pcdPurgeActive, done: s => !s.pcdPurgeActive }
+      { type: "logic", tag: "PERMISSIVE", text: "Mandatory permissive: turbine speed must exceed Ngp > 90% before fuel transfer.", active: s => s.ngp >= 90, done: s => s.ngp >= 90 },
+      { type: "cause", tag: "TRANSFER", text: "Cross-ramp gas shutoff AV2120/24 ↔ Diesel pump P2220 + AV2220/22.", active: s => s.fuelMode === "LIQUID", done: s => s.fuelMode === "LIQUID" },
+      { type: "effect", tag: "3D FLAME", text: "3D combustor flame & fuel streams switch color: Cyan/Green (Gas) ↔ Amber (Diesel).", active: s => true, done: s => s.pcdPurgeActive },
+      { type: "action", tag: "PCD PURGE", text: "Sweep fuel manifold with cooled compressor air via HE2645 (TE2645 < 191°C).", active: s => s.pcdPurgeActive, done: s => !s.pcdPurgeActive }
     ],
     steps: [
-      "Thử nhấn nút Đổi sang DIESEL hoặc Đổi về GAS ngay bên dưới và quan sát P&ID Sht 5–6 cùng luồng hạt 3D.",
-      "Lưu ý: Nếu chuyển về Diesel, bơm P2220/UF2220 tự khởi động và mở van AV2220/2222 không làm rớt tải máy phát."
+      "Click 'Switch DIESEL' or 'Switch GAS' below and watch both P&ID Sht 5–6 and the 3D fuel streams update live.",
+      "Note: transferring to Diesel starts forwarding pump P2220/UF2220 smoothly without dropping generator bus load."
     ],
-    quickBtns: `<button class="btn btn-sm btn-amber" onclick="cmdFuelTransfer('LIQUID')">🔄 Đổi DIESEL</button><button class="btn btn-sm btn-green" onclick="cmdFuelTransfer('GAS')">🔄 Đổi GAS</button><button class="btn btn-sm btn-cyan" onclick="cmdPcdPurge()">💨 PCD Purge</button>`
+    quickBtns: `<button class="btn btn-sm btn-amber" onclick="cmdFuelTransfer('LIQUID')">🔄 Switch DIESEL</button><button class="btn btn-sm btn-green" onclick="cmdFuelTransfer('GAS')">🔄 Switch GAS</button><button class="btn btn-sm btn-cyan" onclick="cmdPcdPurge()">💨 PCD Purge</button>`
   },
   CASE_STOP: {
-    title: "■ CASE OP-3: Dừng máy Bình thường & Slow Roll Chống cong trục",
+    title: "■ CASE OP-3: Normal Stop, Cooldown & Slow Roll (Anti-Rotor Bow)",
     camera: "overview", dcsTab: "turbine",
     causeComp: "generator", effectComps: ["combustor", "starter", "lube", "exhaust"],
     ceLinks3D: [
@@ -3689,18 +4216,18 @@ const GUIDED_CASES = {
       { from: "lube", to: "turbine", color: 0xeab308 }
     ],
     flow: [
-      { type: "cause", tag: "UNLOAD", text: "Giảm tải mềm 40 kW/s trên máy phát Kato → Mở máy cắt 52G khi tải còn 5%.", active: s => s.state === "COOLDOWN" && s.breaker52G, done: s => !s.breaker52G },
-      { type: "logic", tag: "COOLDOWN", text: "Chạy không tải làm nguội đều rotor & ống xả Cullum trước khi đóng van nhiên liệu.", active: s => s.state === "COOLDOWN" && !s.breaker52G, done: s => s.state === "SLOW_ROLL" || s.state === "STOPPED" },
-      { type: "effect", tag: "SLOW ROLL", text: "Dưới 25% Ngp: VFD UF1300 kéo M1300 quay chậm ~15% Ngp + Bơm P3150 Post-Lube.", active: s => s.state === "SLOW_ROLL", done: s => s.state === "STOPPED" }
+      { type: "cause", tag: "UNLOAD", text: "Ramp Kato generator load softly at 40 kW/s → open breaker 52G at 5% load.", active: s => s.state === "COOLDOWN" && s.breaker52G, done: s => !s.breaker52G },
+      { type: "logic", tag: "COOLDOWN", text: "Run no-load cooldown spin to equalize turbine casing & Cullum exhaust temperatures.", active: s => s.state === "COOLDOWN" && !s.breaker52G, done: s => s.state === "SLOW_ROLL" || s.state === "STOPPED" },
+      { type: "effect", tag: "SLOW ROLL", text: "Below 25% Ngp: VFD UF1300 drives M1300 at ~15% Slow Roll + AC Post-Lube P3150.", active: s => s.state === "SLOW_ROLL", done: s => s.state === "STOPPED" }
     ],
     steps: [
-      "Quan sát công suất kW giảm dần về 0, sau đó máy cắt 52G mở và ngọn lửa tắt.",
-      "Khi Ngp < 25%, để ý động cơ M1300 bật xanh kéo trục quay chậm 15% Ngp (tuyệt đối cấm bảo trì khi đang Slow Roll!)."
+      "Watch load ramp steadily to zero, 52G open, and combustor flame extinguish before coastdown.",
+      "Below 25% Ngp, starter M1300 turns green at 15% Slow Roll (NEVER service shaft/generator during Slow Roll!)."
     ],
-    quickBtns: `<button class="btn btn-sm btn-amber" onclick="cmdNormalStop()">■ Kích hoạt Stop</button><button class="btn btn-sm btn-green" onclick="cmdColdStartDemo()">▶ Khởi động lại</button>`
+    quickBtns: `<button class="btn btn-sm btn-amber" onclick="cmdNormalStop()">■ Trigger Stop</button><button class="btn btn-sm btn-green" onclick="cmdColdStartDemo()">▶ Restart Unit</button>`
   },
   CH1: {
-    title: "⚡ CH-1: Tụt áp Khí Gas (PS2106 / PT2120) → Tự chuyển Diesel",
+    title: "⚡ CH-1: Low Fuel Gas Pressure (PS2106 / PT2120) → Auto Diesel Transfer",
     camera: "fuel", dcsTab: "fuel",
     causeComp: "fuelSkid", effectComps: ["combustor", "generator"],
     ceLinks3D: [
@@ -3709,19 +4236,19 @@ const GUIDED_CASES = {
       { from: "combustor", to: "generator", color: 0x22c55e }
     ],
     flow: [
-      { type: "cause", tag: "CAUSE", text: "Áp suất khí cấp PT2120 tụt < 4.48 barg (65 psig) kích hoạt công tắc PS2106.", active: s => s.gasPress < 4.5, done: s => s.gasPress < 4.5 },
-      { type: "logic", tag: "SIS AUTO", text: "Ngp > 90%: PLC GuardLogix kích hoạt Auto Gas-to-Liquid Transfer (không cắt máy!).", active: s => s.fuelMode === "LIQUID", done: s => s.fuelMode === "LIQUID" },
-      { type: "effect", tag: "EFFECT", text: "Đóng van Gas AV2120/24 · Khởi động bơm Diesel P2220 · Mở van AV2220/22.", active: s => s.equip.P2220 === "RUN", done: s => s.equip.P2220 === "RUN" },
-      { type: "action", tag: "TASK", text: "Kiểm tra tải 6.6 kV ổn định trên P&ID và nhấn Ack All để hoàn thành.", active: s => !s.alarms.every(a=>a.ack), done: s => s.alarms.every(a=>a.ack) }
+      { type: "cause", tag: "CAUSE", text: "Fuel gas header PT2120 drops < 4.48 barg (65 psig), actuating SIS switch PS2106.", active: s => s.gasPress < 4.5, done: s => s.gasPress < 4.5 },
+      { type: "logic", tag: "SIS AUTO", text: "Because Ngp > 90%, GuardLogix triggers bumpless Auto Gas-to-Liquid Transfer (no trip!).", active: s => s.fuelMode === "LIQUID", done: s => s.fuelMode === "LIQUID" },
+      { type: "effect", tag: "EFFECT", text: "Closes AV2120/24 · Starts Diesel pump P2220 · Opens liquid shutoff AV2220/22.", active: s => s.equip.P2220 === "RUN", done: s => s.equip.P2220 === "RUN" },
+      { type: "action", tag: "TASK", text: "Confirm steady 6.6 kV generation on P&ID Unit 2000 and click Ack All to complete.", active: s => !s.alarms.every(a=>a.ack), done: s => s.alarms.every(a=>a.ack) }
     ],
     steps: [
-      "Nhìn trên 3D: luồng hạt xanh lá (Gas) tắt và chuyển sang luồng hạt vàng cam (Diesel) + P2220 bật xanh.",
-      "Trên màn hình P&ID Unit 2000: kiểm tra Diesel đang cấp đều cho 12 vòi phun, sau đó nhấn Ack All."
+      "Observe in 3D: green gas particle flow stops while amber Diesel stream activates with P2220 running green.",
+      "Verify stable Diesel feed across 12 dual injectors on P&ID Unit 2000, then click Ack All Alarms."
     ],
-    quickBtns: `<button class="btn btn-sm btn-amber" onclick="ackAllAlarms()">✓ Ack All Alarm</button>`
+    quickBtns: `<button class="btn btn-sm btn-amber" onclick="ackAllAlarms()">✓ Ack All Alarms</button>`
   },
   CH2: {
-    title: "⚡ CH-2: Trip Quạt AXH M3220 → Quá nhiệt Dầu TE3200",
+    title: "⚡ CH-2: AXH Fan M3220 High-Vib Trip → Lube Oil Overtemp TE3200",
     camera: "cooler", dcsTab: "lube",
     causeComp: "cooler", effectComps: ["lube", "turbine"],
     ceLinks3D: [
@@ -3729,19 +4256,19 @@ const GUIDED_CASES = {
       { from: "lube", to: "turbine", color: 0xf59e0b }
     ],
     flow: [
-      { type: "cause", tag: "CAUSE", text: "Quạt làm mát dầu M3220 Trip rung cao (VT3220 = 8.4 > 7.62 mm/s).", active: s => s.equip.M3220 === "TRIP", done: s => s.equip.M3220 === "TRIP" },
-      { type: "effect", tag: "EFFECT", text: "Công suất AXH tụt còn 50% → Nhiệt độ dầu TE3200 tăng vượt 71°C hướng tới cắt 74°C!", active: s => s.lubeTemp >= 65, done: s => s.equip.M3222 === "RUN" && s.lubeTemp < 65 },
-      { type: "action", tag: "OPERATOR", text: "Khởi động ngay quạt dự phòng M3222 (AXH 3×50%) để kéo TE3200 xuống < 65°C + Ack All!", active: s => s.equip.M3222 !== "RUN", done: s => s.equip.M3222 === "RUN" && s.lubeTemp < 65 }
+      { type: "cause", tag: "CAUSE", text: "Cooling fan M3220 trips on high vibration (VT3220 = 8.4 > 7.62 mm/s).", active: s => s.equip.M3220 === "TRIP", done: s => s.equip.M3220 === "TRIP" },
+      { type: "effect", tag: "EFFECT", text: "AXH cooling drops to 50% capacity → Oil header TE3200 climbs past 71°C toward 74°C trip!", active: s => s.lubeTemp >= 65, done: s => s.equip.M3222 === "RUN" && s.lubeTemp < 65 },
+      { type: "action", tag: "OPERATOR", text: "Start standby fan M3222 (3×50% AXH) immediately to pull TE3200 < 65°C + Ack All!", active: s => s.equip.M3222 !== "RUN", done: s => s.equip.M3222 === "RUN" && s.lubeTemp < 65 }
     ],
     steps: [
-      "Nhìn trên 3D cụm AXH 48-3ZF: Quạt #1 dừng quay & nháy đèn đỏ, chỉ còn Quạt #2 quay.",
-      "Nhấn ngay nút 'Start M3222' bên dưới hoặc trên P&ID Unit 3000 (hoặc bảng Thiết bị Phụ trợ) để cứu nhiệt độ dầu!",
-      "Khi nhiệt độ dầu giảm dưới 65°C, nhấn Ack All để hoàn tất."
+      "Inspect AXH 48-3ZF in 3D: Fan #1 stops and flashes red LED while only Fan #2 rotates.",
+      "Click 'Start Fan M3222' below or on P&ID Unit 3000 / Auxiliary Equipment panel to restore 100% cooling!",
+      "Once oil temperature drops below 65°C, click Ack All to solve this scenario."
     ],
-    quickBtns: `<button class="btn btn-sm btn-green" onclick="if(SIM.equip.M3222!=='RUN')toggleAuxEquip('M3222')">▶ Start Quạt M3222</button><button class="btn btn-sm btn-amber" onclick="ackAllAlarms()">✓ Ack All</button>`
+    quickBtns: `<button class="btn btn-sm btn-green" onclick="if(SIM.equip.M3222!=='RUN')toggleAuxEquip('M3222')">▶ Start Fan M3222</button><button class="btn btn-sm btn-amber" onclick="ackAllAlarms()">✓ Ack All</button>`
   },
   CH3: {
-    title: "⚡ CH-3: Trip Quạt Thông gió Vỏ M6211 → Sụt áp PDT6180",
+    title: "⚡ CH-3: Enclosure Vent Fan M6211 Trip → Low ΔP PDT6180",
     camera: "overview", dcsTab: "genfg",
     causeComp: "enclosure", effectComps: ["firegas", "turbine"],
     ceLinks3D: [
@@ -3749,18 +4276,18 @@ const GUIDED_CASES = {
       { from: "ngr", to: "enclosure", color: 0x22c55e }
     ],
     flow: [
-      { type: "cause", tag: "CAUSE", text: "Quạt thông gió chính vỏ 316L M6211 Trip quá dòng.", active: s => s.equip.M6211 === "TRIP", done: s => s.equip.M6211 === "TRIP" },
-      { type: "effect", tag: "EFFECT", text: "Áp dương bảo vệ Zone 1 PDT6180 tụt < 0.15 inH₂O & nhiệt độ khoang TE6110 tăng.", active: s => s.enclDp < 0.25, done: s => s.enclDp >= 0.30 },
-      { type: "action", tag: "OPERATOR", text: "Khởi động quạt dự phòng M6212 (nguồn AC độc lập) khôi phục PDT6180 ≥ 0.30\" + Ack All.", active: s => s.equip.M6212 !== "RUN", done: s => s.equip.M6212 === "RUN" && s.enclDp >= 0.30 }
+      { type: "cause", tag: "CAUSE", text: "Primary 316L enclosure ventilation fan M6211 trips on motor overcurrent.", active: s => s.equip.M6211 === "TRIP", done: s => s.equip.M6211 === "TRIP" },
+      { type: "effect", tag: "EFFECT", text: "Zone 1 positive pressure PDT6180 drops < 0.15 inH₂O and ambient TE6110 rises.", active: s => s.enclDp < 0.25, done: s => s.enclDp >= 0.30 },
+      { type: "action", tag: "OPERATOR", text: "Start standby fan M6212 (independent AC bus) to restore PDT6180 ≥ 0.30\" + Ack All.", active: s => s.equip.M6212 !== "RUN", done: s => s.equip.M6212 === "RUN" && s.enclDp >= 0.30 }
     ],
     steps: [
-      "Theo tiêu chuẩn ATEX (ES 1762), quạt dự phòng M6212 lấy nguồn AC độc lập hoàn toàn với M6211.",
-      "Nhấn 'Start M6212' để khôi phục áp suất dương bảo vệ khoang máy và nhấn Ack All."
+      "Per ATEX design (ES 1762), standby fan M6212 draws from a completely independent AC bus.",
+      "Click 'Start Fan M6212' to restore enclosure pressurization and click Ack All Alarms."
     ],
-    quickBtns: `<button class="btn btn-sm btn-green" onclick="if(SIM.equip.M6212!=='RUN')toggleAuxEquip('M6212')">▶ Start Quạt M6212</button><button class="btn btn-sm btn-amber" onclick="ackAllAlarms()">✓ Ack All</button>`
+    quickBtns: `<button class="btn btn-sm btn-green" onclick="if(SIM.equip.M6212!=='RUN')toggleAuxEquip('M6212')">▶ Start Fan M6212</button><button class="btn btn-sm btn-amber" onclick="ackAllAlarms()">✓ Ack All</button>`
   },
   CH4: {
-    title: "⚡ CH-4: Rò Khí cháy 25% LEL → Cắt Tuabin nhưng GIỮ QUẠT ATEX",
+    title: "⚡ CH-4: Gas Leak 25% LEL → Trip Turbine YET Keep ATEX Vent Running",
     camera: "overview", dcsTab: "genfg",
     causeComp: "firegas", effectComps: ["fuelSkid", "generator", "enclosure"],
     ceLinks3D: [
@@ -3769,20 +4296,20 @@ const GUIDED_CASES = {
       { from: "firegas", to: "enclosure", color: 0x22c55e }
     ],
     flow: [
-      { type: "cause", tag: "10%→25% LEL", text: "Đầu dò PIRECL DTG6561 thấy khí Gas trong vỏ ≥ 10% LEL (Alarm) → 25% LEL (2oo3).", active: s => s.gasLel >= 10, done: s => s.gasLel < 1 },
-      { type: "effect", tag: "FAST STOP", text: "EQP cắt Fast Stop Lockout: Đóng cứng van Gas AV2120/24, mở máy cắt 52G.", active: s => s.lockout, done: s => !s.lockout },
-      { type: "logic", tag: "ATEX RULE", text: "KHÔNG CẮT QUẠT THÔNG GIÓ M6211/M6212! Quạt tiếp tục thổi sạch khí LEL về 0%.", active: s => s.gasLel > 1 && (s.equip.M6211==="RUN"||s.equip.M6212==="RUN"), done: s => s.gasLel < 1 },
-      { type: "action", tag: "RESET", text: "Chờ LEL giảm < 5%, nhấn Ack All và Reset / SA0401 để giải tỏa khóa Lockout.", active: s => s.lockout && s.gasLel < 5, done: s => !s.lockout }
+      { type: "cause", tag: "10%→25% LEL", text: "PIRECL DTG6561 senses enclosure gas climbing ≥ 10% LEL (Alarm) → 25% LEL (2oo3).", active: s => s.gasLel >= 10, done: s => s.gasLel < 1 },
+      { type: "effect", tag: "FAST STOP", text: "EQP triggers Fast Stop Lockout: Slams gas valves AV2120/24 shut, opens 52G breaker.", active: s => s.lockout, done: s => !s.lockout },
+      { type: "logic", tag: "ATEX RULE", text: "DO NOT STOP VENT FANS M6211/M6212! Continuous airflow purges gas LEL safely back to 0%.", active: s => s.gasLel > 1 && (s.equip.M6211==="RUN"||s.equip.M6212==="RUN"), done: s => s.gasLel < 1 },
+      { type: "action", tag: "RESET", text: "Wait until LEL drops < 5%, then click Ack All and Reset / SA0401 to clear Lockout.", active: s => s.lockout && s.gasLel < 5, done: s => !s.lockout }
     ],
     steps: [
-      "Quan sát đám mây khí xanh lá trong vỏ 316L trên 3D tăng tới 25% LEL → Tuabin tự cắt và đóng van Gas.",
-      "Điểm mấu chốt: Quạt thông gió nóc vỏ bao che VẪN QUAY ĐỀU để pha loãng khí cháy (theo ES 1762 Sec 13.1)!",
-      "Khi LEL về < 5%, nhấn Ack All → Reset / SA0401."
+      "Watch green hydrocarbon gas cloud fill the 316L enclosure in 3D until 25% LEL → turbine trips cleanly.",
+      "Key engineering takeaway: Roof vent fans KEEP SPINNING to dilute the explosive gas mixture (ES 1762 Sec 13.1)!",
+      "Once LEL falls < 5%, click Ack All → Reset / SA0401."
     ],
     quickBtns: `<button class="btn btn-sm btn-amber" onclick="ackAllAlarms()">✓ Ack All</button><button class="btn btn-sm btn-cyan" onclick="resetSystem()">↻ Reset SA0401</button>`
   },
   CH5: {
-    title: "🔥 CH-5: Cháy Khoang Tuabin → Chuỗi 5 bước Fire Trip & Marioff",
+    title: "🔥 CH-5: Enclosure Fire → 5-Step Fire Trip & Marioff Water Mist",
     camera: "turbine", dcsTab: "genfg",
     causeComp: "firegas", effectComps: ["enclosure", "fuelSkid", "generator", "lube"],
     ceLinks3D: [
@@ -3792,20 +4319,20 @@ const GUIDED_CASES = {
       { from: "firegas", to: "generator", color: 0xf59e0b }
     ],
     flow: [
-      { type: "cause", tag: "FIRE DET", text: "Đầu dò lửa MIR DTF6510 & nhiệt Fenwal TS6540 (>163°C) xác nhận cháy!", active: s => s.fireDetected, done: s => !s.fireDetected },
-      { type: "effect", tag: "STEP 1–3", text: "Cắt điện AC phụ trợ → Dừng quạt M6211/12 → Đóng sập cửa chặn lửa FD6210/40!", active: s => !s.dampersOpen, done: s => s.dampersOpen },
-      { type: "effect", tag: "STEP 4–5", text: "Xả phun sương nước Marioff 200 barg (hiệu ứng 3D) + Fast Stop + Bơm DC P3170.", active: s => s.waterMistActive, done: s => !s.waterMistActive && !s.fireDetected },
-      { type: "action", tag: "EQP RESET", text: "Chờ Marioff dập tắt lửa hoàn toàn, sau đó nhấn Ack All và Reset / SA0401.", active: s => !s.fireDetected && s.lockout, done: s => !s.lockout }
+      { type: "cause", tag: "FIRE DET", text: "MIR flame detector DTF6510 & Fenwal thermal switch TS6540 (>163°C) confirm fire!", active: s => s.fireDetected, done: s => !s.fireDetected },
+      { type: "effect", tag: "STEP 1–3", text: "Cut Non-Essential AC → Stop vent fans M6211/12 → Close fire dampers FD6210/40!", active: s => !s.dampersOpen, done: s => s.dampersOpen },
+      { type: "effect", tag: "STEP 4–5", text: "Discharge Marioff 200 barg mist (3D spray) + Fast Stop + 120 VDC Pump P3170.", active: s => s.waterMistActive, done: s => !s.waterMistActive && !s.fireDetected },
+      { type: "action", tag: "EQP RESET", text: "Wait until Marioff extinguishes fire completely, then click Ack All and Reset / SA0401.", active: s => !s.fireDetected && s.lockout, done: s => !s.lockout }
     ],
     steps: [
-      "Khác với CH-4 (rò Gas), khi CHÁY xảy ra hệ thống BẮT BUỘC dừng quạt thông gió và đóng sập Damper FD6210/6240 để cô lập ô-xy.",
-      "Quan sát trực tiếp trên 3D: Cửa Damper trên nóc đóng xoay 90° và vòi phun sương nước Marioff ASY6600 xả trắng khoang máy.",
-      "Bơm DC 120V (P3170) tự động chạy từ ắc quy GB0525 để bảo vệ ổ trục khi mất điện AC."
+      "Unlike CH-4 (Gas Leak), a FIRE MUST stop ventilation fans and slam Fire Dampers FD6210/6240 shut to seal oxygen out.",
+      "Watch directly in 3D: roof damper blades rotate 90° closed and Marioff ASY6600 nozzles spray white water mist.",
+      "120 VDC pump P3170 starts automatically from battery bank GB0525 to protect bearings during AC blackout."
     ],
     quickBtns: `<button class="btn btn-sm btn-amber" onclick="ackAllAlarms()">✓ Ack All</button><button class="btn btn-sm btn-cyan" onclick="resetSystem()">↻ Reset EQP / SA0401</button>`
   },
   CH6_T5: {
-    title: "🌡 CH-6: Chênh lệch nhiệt T5 Spread > 111°C (Tắc vòi phun)",
+    title: "🌡 CH-6: T5 Circumferential Spread > 111°C (Clogged Injector)",
     camera: "combustor", dcsTab: "turbine",
     causeComp: "combustor", effectComps: ["turbine", "fuelSkid", "generator"],
     ceLinks3D: [
@@ -3814,17 +4341,17 @@ const GUIDED_CASES = {
       { from: "turbine", to: "generator", color: 0xf59e0b }
     ],
     flow: [
-      { type: "cause", tag: "T5 SPREAD", text: "Chênh lệch giữa 12 cặp nhiệt T5 (TE1150–61) vượt 111°C (200°F).", active: s => s.t5Spread > 111, done: s => !s.lockout },
-      { type: "effect", tag: "FAST STOP", text: "Bảo vệ nhiệt GuardLogix cắt tức thì nhiên liệu & mở máy cắt 52G (FL).", active: s => s.lockout, done: s => !s.lockout }
+      { type: "cause", tag: "T5 SPREAD", text: "Max-Min temperature delta across 12× T5 TCs (TE1150–61) exceeds 111°C (200°F).", active: s => s.t5Spread > 111, done: s => !s.lockout },
+      { type: "effect", tag: "FAST STOP", text: "GuardLogix thermal protection cuts fuel valves immediately & opens 52G breaker (FL).", active: s => s.lockout, done: s => !s.lockout }
     ],
     steps: [
-      "Xem biểu đồ cực 12 cảm biến T5 ở góc dưới phải màn hình DCS.",
-      "Nhấn Ack All → Reset SA0401 để xóa trạng thái khóa."
+      "Inspect the 12-thermocouple T5 radial polar plot at bottom-right of the DCS panel.",
+      "Click Ack All → Reset SA0401 to clear the trip lockout."
     ],
     quickBtns: `<button class="btn btn-sm btn-amber" onclick="ackAllAlarms()">✓ Ack All</button><button class="btn btn-sm btn-cyan" onclick="resetSystem()">↻ Reset SA0401</button>`
   },
   CH7_OS: {
-    title: "⚠ CH-7: Bảo vệ Quá tốc Tuabin SIL 2/3 (GuardLogix + BUOS UA1200)",
+    title: "⚠ CH-7: Turbine SIL 2/3 Overspeed Protection (GuardLogix + BUOS UA1200)",
     camera: "turbine", dcsTab: "turbine",
     causeComp: "turbine", effectComps: ["fuelSkid", "generator", "lube"],
     ceLinks3D: [
@@ -3833,17 +4360,17 @@ const GUIDED_CASES = {
       { from: "ngr", to: "generator", color: 0xf59e0b }
     ],
     flow: [
-      { type: "cause", tag: "OVERSPEED", text: "Tốc độ trục Ngp vượt ngưỡng ≥ 110% cảm nhận bởi SE1260 & BUOS UA1200 (SE1261).", active: s => s.ngp >= 105, done: s => s.ngp < 100 },
-      { type: "effect", tag: "ESD CHAIN", text: "Mở chuỗi Relay cứng KA0235–50: Đóng van Gas/Diesel & mở máy cắt 52G (< 75 ms).", active: s => s.backupRelayTripped, done: s => !s.backupRelayTripped }
+      { type: "cause", tag: "OVERSPEED", text: "Shaft speed Ngp exceeds ≥ 110% threshold sensed by SE1260 & BUOS UA1200 (SE1261).", active: s => s.ngp >= 105, done: s => s.ngp < 100 },
+      { type: "effect", tag: "ESD CHAIN", text: "Drops hardwired relay chain KA0235–50: Slams fuel valves & trips 52G (< 75 ms).", active: s => s.backupRelayTripped, done: s => !s.backupRelayTripped }
     ],
     steps: [
-      "BUOS UA1200 hoạt động độc lập hoàn toàn với PLC để đạt chuẩn an toàn SIL 2/3 (IEC 61508).",
-      "Nhấn Ack All → Reset SA0401 để giải tỏa Backup Relay."
+      "BUOS UA1200 runs completely independent of PLC software to satisfy IEC 61508 SIL 2/3.",
+      "Click Ack All → Reset SA0401 to clear the Backup Relay trip."
     ],
     quickBtns: `<button class="btn btn-sm btn-amber" onclick="ackAllAlarms()">✓ Ack All</button><button class="btn btn-sm btn-cyan" onclick="resetSystem()">↻ Reset SA0401</button>`
   },
   CH8_ESTOP: {
-    title: "⏻ CH-8: Dừng Khẩn cấp E-STOP (SB0400 / Backup Relay Chain)",
+    title: "⏻ CH-8: Hardwired E-STOP Shutdown (SB0400 / Backup Relay Chain)",
     camera: "overview", dcsTab: "cematrix",
     causeComp: "ngr", effectComps: ["fuelSkid", "generator", "lube"],
     ceLinks3D: [
@@ -3852,12 +4379,12 @@ const GUIDED_CASES = {
       { from: "ngr", to: "lube", color: 0x38bdf8 }
     ],
     flow: [
-      { type: "cause", tag: "SB0400", text: "Nhấn nút E-STOP tại Console / JB70 / Skid hoặc SIS từ Giàn công nghệ.", active: s => s.backupRelayTripped, done: s => !s.backupRelayTripped },
-      { type: "effect", tag: "HARDWIRED", text: "Mất điện chuỗi relay KA0235–50: Không Cooldown, Không Slow Roll, bật bơm DC P3170.", active: s => s.lockout, done: s => !s.lockout }
+      { type: "cause", tag: "SB0400", text: "E-STOP pushbutton depressed at Console / JB70 / Skid or CPPT Platform SIS.", active: s => s.backupRelayTripped, done: s => !s.backupRelayTripped },
+      { type: "effect", tag: "HARDWIRED", text: "De-energizes KA0235–50 relay string: No Cooldown, No Slow Roll, engages DC P3170.", active: s => s.lockout, done: s => !s.lockout }
     ],
     steps: [
-      "Xem bảng Ma trận Cause & Effect tự động sáng hàng SB0400 E-Stop và toàn bộ cột tác động.",
-      "Nhấn Ack All → Reset SA0401 để khôi phục."
+      "View the interactive Cause & Effect Matrix highlighting the SB0400 E-Stop row and all actuated columns.",
+      "Click Ack All → Reset SA0401 to restore ready state."
     ],
     quickBtns: `<button class="btn btn-sm btn-amber" onclick="ackAllAlarms()">✓ Ack All</button><button class="btn btn-sm btn-cyan" onclick="resetSystem()">↻ Reset SA0401</button>`
   }
@@ -3924,12 +4451,12 @@ function updateCaseGuideLive() {
     <div class="cg-hdr">
       <strong title="${g.title}">${g.title}</strong>
       <div style="display:flex;gap:3px;flex-shrink:0;">
-        <button class="btn btn-sm" onclick="toggleCaseGuideCollapse()" title="Thu gọn / Mở rộng">${isCollapsed?'▲ Mở':'▼ Thu gọn'}</button>
-        <button class="btn btn-sm" onclick="closeCaseGuide()" title="Đóng hướng dẫn">✕</button>
+        <button class="btn btn-sm" onclick="toggleCaseGuideCollapse()" title="Collapse / Expand">${isCollapsed?'▲ Expand':'▼ Collapse'}</button>
+        <button class="btn btn-sm" onclick="closeCaseGuide()" title="Close guide">✕</button>
       </div>
     </div>
     <div class="cg-body">
-      <div class="ed-sec-title" style="color:#fde68a;margin-bottom:0;">Chuỗi Cause → Logic → Effect (Thời gian thực)</div>
+      <div class="ed-sec-title" style="color:#fde68a;margin-bottom:0;">Cause → Logic → Effect Chain (Real-Time)</div>
       <div class="ce-flow-list">
         ${g.flow.map(n => {
           const isDone = n.done(SIM);
@@ -3942,7 +4469,7 @@ function updateCaseGuideLive() {
         }).join('')}
       </div>
       <div>
-        <div class="ed-sec-title" style="margin-bottom:2px;">Hướng dẫn Quan sát &amp; Thao tác</div>
+        <div class="ed-sec-title" style="margin-bottom:2px;">Observation &amp; Operator Steps</div>
         <ol class="cg-steps">${g.steps.map(s => `<li>${s}</li>`).join('')}</ol>
       </div>
       ${g.quickBtns ? `<div style="display:flex;gap:4px;flex-wrap:wrap;padding-top:2px;">${g.quickBtns}</div>` : ''}
@@ -3952,49 +4479,49 @@ function updateCaseGuideLive() {
 
 /* ---- INTERACTIVE CAUSE & EFFECT MATRIX (TAB 5) ---- */
 const CE_MATRIX_DATA = [
-  { id: 'CH1', cause: 'PS2106 / PT2120 < 4.48b (Low Gas)', active: s => s.gasPress < 4.5, marks: ['ĐÓNG', 'CHẠY', '—', 'GIỮ', '—', '—', '—', 'AUTO'] },
-  { id: 'CH2', cause: 'VT3220 > 7.62 mm/s → TE3200 ≥ 74°C', active: s => s.equip.M3220 === 'TRIP' || s.lubeTemp >= 71, marks: ['(SD≥74)', '—', '(SD)', 'GIỮ', '—', '—', 'P3170*', 'FL (SD)'] },
-  { id: 'CH3', cause: 'M6211 Trip / PDT6180 < 0.15 inH₂O', active: s => s.equip.M6211 === 'TRIP' || s.enclDp < 0.15, marks: ['—', '—', '—', 'BẬT M6212', '—', '—', '—', 'ALARM'] },
-  { id: 'CH4', cause: 'DTG6561–83 ≥ 25% LEL (2oo3 Gas)', active: s => s.gasLel >= 10, marks: ['ĐÓNG', 'ĐÓNG', 'MỞ 52G', 'GIỮ CHẠY!', 'MỞ', '—', 'CHẠY', 'FL (ATEX)'] },
-  { id: 'CH5', cause: 'DTF6510 / TS6540 ≥ 163°C (Fire)', active: s => s.fireDetected || s.waterMistActive, marks: ['ĐÓNG', 'ĐÓNG', 'MỞ 52G', 'CẮT QUẠT!', 'ĐÓNG SẬP', 'XẢ 200b', 'CHẠY', 'FL (5-BƯỚC)'] },
-  { id: 'CH6_T5', cause: 'T5 Spread > 111°C / Hi T5 > 20s', active: s => s.t5Spread > 111 || s.t5Avg > 810, marks: ['ĐÓNG', 'ĐÓNG', 'MỞ 52G', 'GIỮ', '—', '—', 'CHẠY', 'FL'] },
-  { id: 'CH7_OS', cause: 'SE1260 / BUOS UA1200 Overspeed', active: s => s.ngp >= 105 || s.alarms.some(a=>a.tag==='UA1200'&&a.active), marks: ['ĐÓNG', 'ĐÓNG', 'MỞ 52G', 'GIỮ', '—', '—', 'CHẠY', 'FL (SIL3)'] },
-  { id: 'CH8_ESTOP', cause: 'SB0400 / SB7512 Hardwired E-Stop', active: s => s.backupRelayTripped && s.alarms.some(a=>a.tag==='SB0400'&&a.active), marks: ['ĐÓNG', 'ĐÓNG', 'MỞ 52G', 'GIỮ', '—', '—', 'CHẠY', 'FL (ESD)'] }
+  { id: 'CH1', cause: 'PS2106 / PT2120 < 4.48b (Low Gas)', active: s => s.gasPress < 4.5, marks: ['CLOSE', 'RUN', '—', 'KEEP', '—', '—', '—', 'AUTO XFER'] },
+  { id: 'CH2', cause: 'VT3220 > 7.62 mm/s → TE3200 ≥ 74°C', active: s => s.equip.M3220 === 'TRIP' || s.lubeTemp >= 71, marks: ['(SD≥74)', '—', '(SD)', 'KEEP', '—', '—', 'P3170*', 'FL (SD)'] },
+  { id: 'CH3', cause: 'M6211 Trip / PDT6180 < 0.15 inH₂O', active: s => s.equip.M6211 === 'TRIP' || s.enclDp < 0.15, marks: ['—', '—', '—', 'START M6212', '—', '—', '—', 'ALARM'] },
+  { id: 'CH4', cause: 'DTG6561–83 ≥ 25% LEL (2oo3 Gas)', active: s => s.gasLel >= 10, marks: ['CLOSE', 'CLOSE', 'OPEN 52G', 'KEEP ON!', 'OPEN', '—', 'RUN', 'FL (ATEX)'] },
+  { id: 'CH5', cause: 'DTF6510 / TS6540 ≥ 163°C (Fire)', active: s => s.fireDetected || s.waterMistActive, marks: ['CLOSE', 'CLOSE', 'OPEN 52G', 'CUT FANS!', 'SHUT', 'DISCH 200b', 'RUN', 'FL (5-STEP)'] },
+  { id: 'CH6_T5', cause: 'T5 Spread > 111°C / Hi T5 > 20s', active: s => s.t5Spread > 111 || s.t5Avg > 810, marks: ['CLOSE', 'CLOSE', 'OPEN 52G', 'KEEP', '—', '—', 'RUN', 'FL'] },
+  { id: 'CH7_OS', cause: 'SE1260 / BUOS UA1200 Overspeed', active: s => s.ngp >= 105 || s.alarms.some(a=>a.tag==='UA1200'&&a.active), marks: ['CLOSE', 'CLOSE', 'OPEN 52G', 'KEEP', '—', '—', 'RUN', 'FL (SIL3)'] },
+  { id: 'CH8_ESTOP', cause: 'SB0400 / SB7512 Hardwired E-Stop', active: s => s.backupRelayTripped && s.alarms.some(a=>a.tag==='SB0400'&&a.active), marks: ['CLOSE', 'CLOSE', 'OPEN 52G', 'KEEP', '—', '—', 'RUN', 'FL (ESD)'] }
 ];
 
 function renderCeMatrix() {
   const wrap = document.getElementById('ceMatrixWrap');
   if (!wrap) return;
   const markCls = m => {
-    if (m.includes('GIỮ') || m.includes('BẬT')) return 'ce-mark-keep';
-    if (m.includes('ĐÓNG') || m.includes('CẮT') || m.includes('MỞ') || m.includes('XẢ') || m.includes('FL')) return 'ce-mark-trip';
+    if (m.includes('KEEP') || m.includes('START')) return 'ce-mark-keep';
+    if (m.includes('CLOSE') || m.includes('CUT') || m.includes('OPEN 52G') || m.includes('SHUT') || m.includes('DISCH') || m.includes('FL')) return 'ce-mark-trip';
     if (m !== '—') return 'ce-mark-act';
     return 'ce-mark-none';
   };
   wrap.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px;">
-      <strong style="font-size:11.5px;color:var(--cyan);">🔗 MA TRẬN CAUSE &amp; EFFECT TƯƠNG TÁC (4J731-CTDS / PIL 262 / PIL 150)</strong>
-      <span style="font-size:10px;color:var(--muted);">Click trực tiếp vào một hàng Cause để mô phỏng ngay trên 3D &amp; DCS</span>
+      <strong style="font-size:11.5px;color:var(--cyan);">🔗 INTERACTIVE CAUSE &amp; EFFECT MATRIX (4J731-CTDS / PIL 262 / PIL 150)</strong>
+      <span style="font-size:10px;color:var(--muted);">Click any Cause row directly to simulate its response in 3D &amp; DCS</span>
     </div>
     <table class="ce-table">
       <thead>
         <tr>
-          <th>CAUSE (Nguyên nhân / Tín hiệu)</th>
-          <th>Van Gas<br>AV2120/24</th>
+          <th>CAUSE (Initiating Event / Signal)</th>
+          <th>Fuel Gas<br>AV2120/24</th>
           <th>Diesel<br>P2220</th>
-          <th>Máy cắt<br>52G</th>
-          <th>Quạt Vỏ<br>M6211/12</th>
-          <th>Damper<br>FD6210/40</th>
+          <th>Gen CB<br>52G</th>
+          <th>Vent Fan<br>M6211/12</th>
+          <th>Dampers<br>FD6210/40</th>
           <th>Marioff<br>ASY6600</th>
-          <th>Bơm DC<br>P3170</th>
-          <th>Loại Dừng</th>
+          <th>DC Pump<br>P3170</th>
+          <th>Stop Mode</th>
         </tr>
       </thead>
       <tbody>
         ${CE_MATRIX_DATA.map(row => {
           const isAct = row.active(SIM) || SIM.activeCase === row.id;
           return `
-          <tr class="ce-row-btn ${isAct?'ce-row-active':''}" onclick="activateGuidedCase('${row.id}')" title="Click để kích hoạt & xem hướng dẫn Cause-Effect trên 3D">
+          <tr class="ce-row-btn ${isAct?'ce-row-active':''}" onclick="activateGuidedCase('${row.id}')" title="Click to trigger & inspect Cause-Effect in 3D">
             <td>${isAct?'🔴 ':''}${row.cause}</td>
             ${row.marks.map(m => `<td class="${markCls(m)}">${m}</td>`).join('')}
           </tr>`;
@@ -4002,9 +4529,9 @@ function renderCeMatrix() {
       </tbody>
     </table>
     <div style="font-size:10px;color:#cbd5e1;background:rgba(15,23,42,0.8);border:1px solid var(--border);border-radius:5px;padding:6px 8px;line-height:1.45;">
-      <b>Điểm đối chiếu trọng yếu trong hồ sơ MEC006:</b>
-      (1) Khi <b>Rò khí Gas 25% LEL</b>: Cắt máy nhưng <span style="color:#4ade80;font-weight:700;">BẮT BUỘC GIỮ QUẠT THÔNG GIÓ CHẠY</span> để thổi khí (ATEX ES 1762).
-      (2) Khi <b>Cháy (Fire)</b>: <span style="color:#fca5a5;font-weight:700;">DỪNG QUẠT + ĐÓNG DAMPER FD6210/40</span> trước khi xả sương <b>Marioff 200 barg</b>.
+      <b>Critical MEC006 Protection Interlocks:</b>
+      (1) On <b>25% LEL Gas Leak</b>: Fast Stop turbine yet <span style="color:#4ade80;font-weight:700;">KEEP ENCLOSURE VENT FAN RUNNING</span> to purge gas (ATEX ES 1762).
+      (2) On <b>Confirmed Fire</b>: <span style="color:#fca5a5;font-weight:700;">STOP VENT FANS + CLOSE DAMPERS FD6210/40</span> prior to <b>Marioff 200 barg Mist</b> discharge.
     </div>
   `;
 }
@@ -4169,7 +4696,7 @@ window.updateLabels3D = function(dt) {
     else if (comp.id === 'exhaust') st = `${Math.round(SIM.exhaustC)}°C · DIM A`;
     else if (comp.id === 'cooler') {
       const fans = ['M3220','M3221','M3222'].filter(k => SIM.equip[k]==='RUN').length;
-      st = `${fans}/3 Quạt · ${SIM.lubeTemp.toFixed(1)}°C`;
+      st = `${fans}/3 Fans · ${SIM.lubeTemp.toFixed(1)}°C`;
       if (SIM.equip.M3220 === 'TRIP') cls += ' tag-trip';
       else if (SIM.lubeTemp >= 71) cls += ' tag-alarm';
     } else if (comp.id === 'lube') st = `${SIM.lubePress.toFixed(0)} psig · ${SIM.lubeLevel.toFixed(1)}"`;
@@ -4177,7 +4704,7 @@ window.updateLabels3D = function(dt) {
       st = `ΔP ${SIM.enclDp.toFixed(2)}" · ${Math.round(SIM.enclTemp)}°C`;
       if (SIM.equip.M6211 === 'TRIP' && SIM.equip.M6212 !== 'RUN') cls += ' tag-trip';
     } else if (comp.id === 'firegas') {
-      st = SIM.waterMistActive ? '💧 PHUN SƯƠNG!' : (SIM.gasLel > 0 ? `LEL ${SIM.gasLel.toFixed(0)}%` : 'EQP AUTO');
+      st = SIM.waterMistActive ? '💧 WATER MIST!' : (SIM.gasLel > 0 ? `LEL ${SIM.gasLel.toFixed(0)}%` : 'EQP AUTO');
       if (SIM.fireDetected || SIM.gasLel >= 10 || SIM.waterMistActive) cls += ' tag-trip';
     } else if (comp.id === 'fuelSkid') {
       st = SIM.fuelMode === 'GAS' ? `Gas ${SIM.gasPress.toFixed(1)}b` : `Diesel ${SIM.liqPress.toFixed(1)}b`;
